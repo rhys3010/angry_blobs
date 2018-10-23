@@ -13,7 +13,7 @@
     <script src="/vendor/three/three.min.js"></script>
     <script src="/vendor/jquery/jquery.min.js"></script>
 
-    <!-- Load Modularized Game Files -->
+    <!-- Load Modularized Game Source Files -->
     <script src="./src/js/app.js"></script>
   </body>
 </html>
