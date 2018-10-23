@@ -1,0 +1,20 @@
+{
+  "name": "angryblobs",
+  "version": "0.0.1",
+  "description": "Angry Birds inspired game implemented in Three.js",
+  "main": "index.php",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rhys Evans",
+  "license": "ISC",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.10.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-uglify": "^3.0.1",
+    "jquery": "^3.3.1",
+    "three": "^0.97.0"
+  }
+}
