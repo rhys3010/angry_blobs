@@ -1,10 +1,17 @@
-.btn-primary {
-  background-color: transparent;
-  border-color: #fff;
+@font-face {
+  font-family: 'Fixedsys';
+  src: url("../assets/fonts/Fixedsys.ttf");
 }
 
-.btn-primary:hover {
-  border-color: #e6e6e6;
+.btn-primary {
+  background-color: transparent;
+  border: 2px #fff solid;
+  cursor: pointer;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: #81726d !important;
+  border-color: #fff !important;
 }
 
 .text-primary {
@@ -19,8 +26,17 @@
   color: #544742 !important;
 }
 
-.bg-secondaru {
+.bg-secondary {
   color: #fff !important;
+}
+
+#start-container .title {
+  font-size: 128px;
+}
+
+#start-container .btn {
+  font-size: 76px;
+  margin-top: 10%;
 }
 
 html, body {
@@ -31,6 +47,15 @@ html, body {
   overflow: hidden;
 }
 
+a {
+  text-decoration: underline;
+  color: #fff;
+}
+
+a:hover {
+  color: white;
+}
+
 #main-container {
   background-color: #544742;
   display: block;
@@ -38,4 +63,11 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: 'Fixedsys', Monospace;
+}
+
+#info {
+  position: fixed;
+  bottom: 0;
+  left: 1%;
 }

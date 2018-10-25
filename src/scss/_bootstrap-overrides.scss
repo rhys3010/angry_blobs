@@ -1,9 +1,13 @@
 .btn-primary{
   background-color: transparent;
-  border-color: $secondary;
+  border: 2px $secondary solid;
+  cursor: pointer;
 
-  &:hover{
-    border-color: darken($secondary, 10%);
+  &:hover,
+  &:focus,
+  &:active{
+    background-color: $primary-light !important;
+    border-color: $white !important;
   }
 }
 
@@ -19,6 +23,6 @@
   color: $primary !important;
 }
 
-.bg-secondaru{
+.bg-secondary{
   color: $secondary !important;
 }

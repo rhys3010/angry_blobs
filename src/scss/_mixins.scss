@@ -1,0 +1,12 @@
+@font-face{
+  font-family: 'Fixedsys';
+  src: url('../assets/fonts/Fixedsys.ttf');
+}
+
+@mixin heading-font{
+  font-family: 'Fixedsys', Monospace;
+}
+
+@mixin sans-serif-font{
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+}
