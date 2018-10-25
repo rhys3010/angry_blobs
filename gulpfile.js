@@ -29,6 +29,12 @@ gulp.task('vendor', function() {
   ])
   .pipe(gulp.dest('./vendor/physijs'))
 
+  // Bootstrap
+  gulp.src([
+    './node_modules/bootstrap/dist/css/bootstrap.min.css'
+  ])
+  .pipe(gulp.dest('./vendor/bootstrap'))
+
   // Jquery
   gulp.src([
     './node_modules/jquery/dist/*',

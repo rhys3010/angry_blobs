@@ -1,0 +1,24 @@
+.btn-primary{
+  background-color: transparent;
+  border-color: $secondary;
+
+  &:hover{
+    border-color: darken($secondary, 10%);
+  }
+}
+
+.text-primary{
+  color: $primary !important;
+}
+
+.text-secondary{
+  color: $secondary !important;
+}
+
+.bg-primary{
+  color: $primary !important;
+}
+
+.bg-secondaru{
+  color: $secondary !important;
+}
