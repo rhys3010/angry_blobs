@@ -1,4 +1,5 @@
 /**
+  * gulpfile.js
   * Angry Blobs - Gulp Configuration
   *
   * @author Rhys Evans
@@ -20,6 +21,13 @@ gulp.task('vendor', function() {
       './node_modules/three/build/three.min.js',
     ])
     .pipe(gulp.dest('./vendor/three'))
+
+  // Physijs
+  gulp.src([
+    './node_modules/nodejs-physijs/nodejs/libs/*',
+    '!./node_modules/nodejs-physijs/nodejs/libs/three.js'
+  ])
+  .pipe(gulp.dest('./vendor/physijs'))
 
   // Jquery
   gulp.src([

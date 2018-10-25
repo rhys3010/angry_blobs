@@ -1,3 +1,4 @@
 node_modules/
 vendor/
 docs/trello-link.txt
+dist/
