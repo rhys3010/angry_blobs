@@ -17,6 +17,7 @@
     "gulp-uglify": "^3.0.1",
     "jquery": "^3.3.1",
     "nodejs-physijs": "^0.1.5",
+    "qunit": "^2.7.1",
     "three": "^0.97.0"
   }
 }

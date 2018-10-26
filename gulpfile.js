@@ -42,6 +42,13 @@ gulp.task('vendor', function() {
     '!./node_modules/jquery/dist/core.js'
   ])
   .pipe(gulp.dest('./vendor/jquery'))
+
+  // qUnit
+  gulp.src([
+    './node_modules/qunit/qunit/*',
+
+  ])
+  .pipe(gulp.dest('./vendor/qunit'))
 });
 
 // Compile SCSS
