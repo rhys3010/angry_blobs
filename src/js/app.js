@@ -7,5 +7,6 @@
 */
 
 $(document).ready(function(){
-
+  State.changeState(STATE.START);
+  UserInput.initialize();
 });

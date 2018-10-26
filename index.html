@@ -23,21 +23,23 @@
   <body>
     <!-- Create Main Container -->
     <div id="main-container">
-      <div id="start-container" class="m-0 p-0">
+      <!-- Start Screen Container -->
+      <div id="start-container" class="m-0 p-0" hidden>
         <div class="container mx-auto text-secondary">
           <h1 class="title text-center">Angry Blobs</h1>
           <div class="row">
-            <a class="btn btn-lg btn-primary mx-auto">Start</a>
+            <a id="start-button" class="btn btn-lg btn-primary mx-auto">Start</a>
           </div>
         </div>
       </div>
-
-      <div id="game-container" class="m-0 p-0">
+      <!-- Game Container -->
+      <div id="game-container" class="m-0 p-0" hidden>
+        <h1 class="title text-center">GAME SCREEN</h1>
       </div>
-
-      <div id="end-container" class="m-0 p-0">
+      <!-- End Screen Container -->
+      <div id="end-container" class="m-0 p-0" hidden>
+        <h1 class="title text-center">END SCREEN</h1>
       </div>
-
       <div id="info">
         <p class="small my-4 text-secondary">Made By <a href="http://rhysevans.xyz"> Rhys Evans</a> | Version: 0.01</p>
       </div>
@@ -51,5 +53,9 @@
 
     <!-- Load Modularized Game Source Files -->
     <script src="/src/js/app.js"></script>
+    <script src="/src/js/constants.js"></script>
+    <script src="/src/js/userInput.js"></script>
+    <script src="/src/js/game.js"></script>
+    <script src="/src/js/state.js"></script>
   </body>
 </html>

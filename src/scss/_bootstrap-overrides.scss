@@ -9,6 +9,10 @@
     background-color: $primary-light !important;
     border-color: $white !important;
   }
+
+  &:active{
+    background-color: $primary-dark !important;
+  }
 }
 
 .text-primary{

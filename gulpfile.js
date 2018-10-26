@@ -31,7 +31,8 @@ gulp.task('vendor', function() {
 
   // Bootstrap
   gulp.src([
-    './node_modules/bootstrap/dist/css/bootstrap.min.css'
+    './node_modules/bootstrap/dist/css/bootstrap.min.css',
+    './node_modules/bootstrap/dist/css/bootstrap.min.css.map'
   ])
   .pipe(gulp.dest('./vendor/bootstrap'))
 
