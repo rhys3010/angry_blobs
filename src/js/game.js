@@ -31,5 +31,4 @@ var Game = (function(){
   return{
     startGame: startGame,
   };
-
 }());
