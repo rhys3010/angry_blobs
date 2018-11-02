@@ -13,6 +13,7 @@ var Game = (function(){
 
   'use strict';
 
+
   /* ===== PRIVATE METHODS ===== */
 
 
@@ -23,6 +24,15 @@ var Game = (function(){
   */
   function startGame(){
     State.changeState(STATE.PLAY);
+    ThreeComponents.init();
+    ThreeComponents.animate();
+  }
+
+  /**
+    * End the game by switching to end screen.
+  */
+  function endGame(){
+    State.changeState(STATE.END);
   }
 
 
@@ -30,5 +40,6 @@ var Game = (function(){
 
   return{
     startGame: startGame,
+    endGame: endGame,
   };
 }());

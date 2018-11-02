@@ -22,13 +22,6 @@ gulp.task('vendor', function() {
     ])
     .pipe(gulp.dest('./vendor/three'))
 
-  // Physijs
-  gulp.src([
-    './node_modules/nodejs-physijs/nodejs/libs/*',
-    '!./node_modules/nodejs-physijs/nodejs/libs/three.js'
-  ])
-  .pipe(gulp.dest('./vendor/physijs'))
-
   // Bootstrap
   gulp.src([
     './node_modules/bootstrap/dist/css/bootstrap.min.css',
@@ -42,13 +35,6 @@ gulp.task('vendor', function() {
     '!./node_modules/jquery/dist/core.js'
   ])
   .pipe(gulp.dest('./vendor/jquery'))
-
-  // qUnit
-  gulp.src([
-    './node_modules/qunit/qunit/*',
-
-  ])
-  .pipe(gulp.dest('./vendor/qunit'))
 });
 
 // Compile SCSS

@@ -11,6 +11,8 @@
 */
 var UserInput = (function(){
 
+  'use strict';
+
   // Declare all buttons
   var startButton = document.getElementById('start-button');
 
