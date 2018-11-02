@@ -21,4 +21,7 @@ const SCREEN = {
 };
 
 // Three.js Scene Constants
-const CAMERA_DIST = 350;
+const CAMERA_DIST = 150;
+
+// Object constants
+const PROJECTILE_WEIGHT = 1;
