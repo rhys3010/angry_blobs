@@ -22,7 +22,7 @@ var UserInput = (function(){
     * Handle mouse movement to control firing angle when in game screen
   */
   function mouseMove(event){
-    if(State.getState() === STATE.PLAY){
+    if(Game.getState() === STATE.PLAY){
       var mouseX = (event.clientX / window.innerWidth) * 2 - 1;
       var mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
 

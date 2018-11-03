@@ -7,6 +7,6 @@
 */
 
 $(document).ready(function(){
-  State.changeState(STATE.START);
+  Game.changeState(STATE.START);
   UserInput.initialize();
 });

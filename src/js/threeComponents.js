@@ -15,9 +15,8 @@ var ThreeComponents = (function(){
   var camera, scene, renderer;
   // Scene/Game objects
   var ground, projectile, block, structure, arrow;
-
-  // The origin location of the directional arrow
-  var arrowOrigin;
+  // The origin and direction  of the guiding arrow
+  var arrowOrigin, arrowDirection;
 
 
   /* ===== PRIVATE METHODS ===== */
@@ -137,8 +136,10 @@ var ThreeComponents = (function(){
     raycaster.setFromCamera(mouse, camera);
     raycaster.ray.intersectPlane(plane, intersect);
 
+    arrowDirection = new THREE.Vector3().subVectors(intersect, arrowOrigin).normalize()
+
     // Face the arrow towards the intersect point
-    arrow.setDirection(new THREE.Vector3().subVectors(intersect, arrowOrigin).normalize());
+    arrow.setDirection(arrowDirection);
   }
 
 
