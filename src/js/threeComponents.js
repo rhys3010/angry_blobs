@@ -34,7 +34,7 @@ var ThreeComponents = (function(){
   /**
     * Create the geometry, materials and meshes for each of the scene's objects
   */
-  function initObjects(){
+  function createObjects(){
 
     // Create and position the ground mesh
     var groundGeometry = new THREE.BoxGeometry(70, 5, 10);
@@ -57,7 +57,7 @@ var ThreeComponents = (function(){
     scene.add(projectile);
     scene.updateMatrixWorld(true);
 
-    // Create Arrow and Add to scene
+    // (Re)create Arrow and Add to scene
     var projectilePosition = new THREE.Vector3();
     arrowOrigin = projectilePosition.setFromMatrixPosition(projectile.matrixWorld);
     // Face arrow forwards by default
@@ -66,22 +66,13 @@ var ThreeComponents = (function(){
     scene.add(arrow);
   }
 
-  /**
-    * Point Camera in correct direction and render scene
-  */
-  function render(){
-    // Physijs simulatoins
-    scene.simulate();
-    camera.lookAt(scene.position);
-    renderer.render(scene, camera);
-  }
 
   /* ===== PUBLIC METHODS ===== */
 
   /**
-    * Initialize Physijs scene by adding camera, lights and initializing renderer
+    * Create the scene by adding camera, lights, renderer and objects
   */
-  function init(){
+  function create(){
     // Initialize PhysiJs
     Physijs.scripts.worker = "../../vendor/physijs/physijs_worker.js";
     Physijs.scripts.ammo = "../../vendor/physijs/ammo.js";
@@ -97,7 +88,7 @@ var ThreeComponents = (function(){
     scene.add(camera);
 
     // Add objects
-    initObjects();
+    createObjects();
 
     // Initialize renderer and add to DOM
     renderer = new THREE.WebGLRenderer({antialias: true});
@@ -110,11 +101,38 @@ var ThreeComponents = (function(){
   }
 
   /**
-    * Animate the scene
+    * Render the scene
   */
-  function animate(){
-    render();
-    requestAnimationFrame(animate);
+  function render(){
+    // Physijs simulatoins
+    scene.simulate();
+    camera.lookAt(scene.position);
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+  }
+
+  /**
+    * Initialize the scene by placing all objects in their default positions etc,
+  */
+  function initScene(){
+
+    // Set reusable Object positions to default
+    ground.position.set(0, -15, 0)
+    ground.__dirtyPosition = true;
+    projectile.position.set(-30, -11.5, 0);
+    projectile.__dirtyPosition = true;
+
+    // Reset projectile velocity
+    projectile.setLinearVelocity(new THREE.Vector3(0, 0, 0));
+    // Show arrow
+    arrow.visible = true;
+
+    // TODO:
+    // * Remove previous structure blocks
+    // * Pick random structure combo and place
+
+    // update scene
+    scene.updateMatrixWorld(true);
   }
 
   /**
@@ -142,11 +160,26 @@ var ThreeComponents = (function(){
     arrow.setDirection(arrowDirection);
   }
 
+  /**
+    * Launch the projectile:
+    * Set the direction of the launch to that of the guide arrow
+    * Multiply the directional vector by a scalar (5-50) depending on power chosen
+    * @param power
+  */
+  function launchProjectile(power){
+    projectile.setLinearVelocity(arrowDirection.multiplyScalar(power));
+
+    // Hide arrow
+    arrow.visible = false;
+  }
+
 
   /* ===== EXPORT PUBLIC METHODS ===== */
   return{
-    init: init,
-    animate: animate,
+    create: create,
+    render: render,
     updateArrowDir: updateArrowDir,
+    launchProjectile: launchProjectile,
+    initScene: initScene,
   };
 }());

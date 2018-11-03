@@ -8,6 +8,7 @@
 
 // State Enum Type
 const STATE = {
+  INVALID: -1,
   START: 0,
   PLAY: 1,
   END: 2,
@@ -19,3 +20,8 @@ const SCREEN = {
   GAME_SCREEN: document.getElementById('game-container'),
   END_SCREEN: document.getElementById('end-container'),
 };
+
+// Game Constants
+SEC_TO_POWER_CONSTANT = 40;
+MIN_POWER = 5;
+MAX_POWER = 50;

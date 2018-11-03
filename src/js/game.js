@@ -13,8 +13,10 @@ var Game = (function(){
 
   'use strict';
 
-  // Store the current state of the game (initialize as start)
-  var currentState = STATE.START;
+  // Store the current state of the game (initialize as invalid)
+  var currentState = STATE.INVALID;
+  // Boolean value to store wether it is valid for the user to take a turn
+  var canTakeTurn = true;
 
 
   /* ===== PRIVATE METHODS ===== */
@@ -64,6 +66,12 @@ var Game = (function(){
     * @param newState
   */
   function changeState(newState){
+
+    // If current state is the same as new state, return
+    if(Game.getState() === newState){
+      return;
+    }
+
     currentState = newState;
 
     // Update screen to represent new state
@@ -76,6 +84,9 @@ var Game = (function(){
         break;
       case STATE.END:
         changeScreen(SCREEN.END_SCREEN);
+        break;
+      case STATE_INVALID:
+        console.error("Invalid State: Please Restart.");
         break;
     }
   }
@@ -99,15 +110,25 @@ var Game = (function(){
   */
   function startGame(){
     changeState(STATE.PLAY);
-    ThreeComponents.init();
-    ThreeComponents.animate();
+    ThreeComponents.initScene();
   }
 
   /**
     * End the game by switching to end screen.
   */
   function endGame(){
-    State.changeState(STATE.END);
+    changeState(STATE.END);
+  }
+
+  /**
+    * Take a turn by launching the projectile using the ThreeComponents module.
+    * @param power (5-50) - The power to apply to the launch
+  */
+  function takeTurn(power){
+    if(canTakeTurn){
+      ThreeComponents.launchProjectile(power);
+    }
+    canTakeTurn = false;
   }
 
 
@@ -118,5 +139,6 @@ var Game = (function(){
     getState: getState,
     startGame: startGame,
     endGame: endGame,
+    takeTurn: takeTurn,
   };
 }());
