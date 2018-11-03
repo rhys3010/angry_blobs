@@ -23,6 +23,8 @@ var State = (function(){
     * @param newScreen
   */
   function changeScreen(newScreen){
+    var info = document.getElementById('info');
+
     // Hide all Screens
     $(SCREEN.START_SCREEN).hide();
     $(SCREEN.GAME_SCREEN).hide();
@@ -33,14 +35,20 @@ var State = (function(){
       case SCREEN.START_SCREEN:
         $(SCREEN.START_SCREEN).show();
         $(SCREEN.START_SCREEN).removeAttr("hidden");
+        // Show info
+        $(info).show();
         break;
       case SCREEN.GAME_SCREEN:
         $(SCREEN.GAME_SCREEN).show();
         $(SCREEN.GAME_SCREEN).removeAttr("hidden");
+        // Hide info
+        $(info).hide();
         break;
       case SCREEN.END_SCREEN:
         $(SCREEN.END_SCREEN).show();
         $(SCREEN.END_SCREEN).removeAttr("hidden");
+        // Show info
+        $(info).show();
         break;
       default:
         $(SCREEN.START_SCREEN).show();

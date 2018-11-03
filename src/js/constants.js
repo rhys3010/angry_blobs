@@ -19,9 +19,3 @@ const SCREEN = {
   GAME_SCREEN: document.getElementById('game-container'),
   END_SCREEN: document.getElementById('end-container'),
 };
-
-// Three.js Scene Constants
-const CAMERA_DIST = 150;
-
-// Object constants
-const PROJECTILE_WEIGHT = 1;
