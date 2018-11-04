@@ -16,6 +16,7 @@ var UserInput = (function(){
   // Declare all HTML elements
   var startButton = document.getElementById('start-button');
   var restartButton = document.getElementById('restart-button');
+  var powerTooltip = document.getElementById('power-tooltip');
 
   // Mouse press/release variable to measure power
   var mousePressed;
@@ -34,6 +35,12 @@ var UserInput = (function(){
 
       // Update the arrow direction given the mouse's new position
       ThreeComponents.updateArrowDir(mouseX, mouseY);
+
+      // Update power indicator position if mouse is held down
+      if(mouseDownInterval != -1){
+        powerTooltip.style.top = (event.pageY + 20) + 'px';
+        powerTooltip.style.left = (event.pageX - 30) + 'px';
+      }
     }
   }
 
@@ -41,11 +48,17 @@ var UserInput = (function(){
     * Handle mouse click to begin timer
   */
   function mouseDown(event){
+
     // Verify that the correct state is selected
     if(Game.getState() === STATE.PLAY && Game.getCanTakeTurn()){
       mousePressed = new Date();
 
-      // Get current power and display to user
+      // Show power indicator next to mouse
+      powerTooltip.style.display = 'block';
+      powerTooltip.style.top = (event.pageY + 20) + 'px';
+      powerTooltip.style.left = (event.pageX - 30) + 'px';
+
+      // Get current power and display on indicator
       if(mouseDownInterval === -1){
         mouseDownInterval = setInterval(function(){
           var power = Math.floor((new Date() - mousePressed) / SEC_TO_POWER_CONSTANT);
@@ -54,7 +67,7 @@ var UserInput = (function(){
           if(power >= MAX_POWER){
             power = MAX_POWER;
           }
-          console.log(power);
+          powerTooltip.innerHTML = "Power: " + Math.floor((power / MAX_POWER) * 100) + "%";
         }, 50);
       }
     }
@@ -78,6 +91,9 @@ var UserInput = (function(){
       var power = 0;
       // Calculate how long the mouse was pressed for
       var heldTime = new Date() - mousePressed;
+
+      // Hide power indicator
+      powerTooltip.style.display = 'none';
 
       // If mouse was held for longer than 2000ms apply maximum power
       if(heldTime >= MAX_POWER * SEC_TO_POWER_CONSTANT){
