@@ -48,27 +48,29 @@ var UserInput = (function(){
     * Handle mouse click to begin timer
   */
   function mouseDown(event){
+    // Prevent tooltip from showing when clicking buttons
+    if(event.target.tagName != "A" || event.target.tagName != "BUTTON"){
+      // Verify that the correct state is selected
+      if(Game.getState() === STATE.PLAY && Game.getCanTakeTurn()){
+        mousePressed = new Date();
 
-    // Verify that the correct state is selected
-    if(Game.getState() === STATE.PLAY && Game.getCanTakeTurn()){
-      mousePressed = new Date();
+        // Show power indicator next to mouse
+        powerTooltip.style.display = 'block';
+        powerTooltip.style.top = (event.pageY + 20) + 'px';
+        powerTooltip.style.left = (event.pageX - 30) + 'px';
 
-      // Show power indicator next to mouse
-      powerTooltip.style.display = 'block';
-      powerTooltip.style.top = (event.pageY + 20) + 'px';
-      powerTooltip.style.left = (event.pageX - 30) + 'px';
+        // Get current power and display on indicator
+        if(mouseDownInterval === -1){
+          mouseDownInterval = setInterval(function(){
+            var power = Math.floor((new Date() - mousePressed) / SEC_TO_POWER_CONSTANT);
 
-      // Get current power and display on indicator
-      if(mouseDownInterval === -1){
-        mouseDownInterval = setInterval(function(){
-          var power = Math.floor((new Date() - mousePressed) / SEC_TO_POWER_CONSTANT);
-
-          // If power has maxed display max value and stop printing
-          if(power >= MAX_POWER){
-            power = MAX_POWER;
-          }
-          powerTooltip.innerHTML = "Power: " + Math.floor((power / MAX_POWER) * 100) + "%";
-        }, 50);
+            // If power has maxed display max value and stop printing
+            if(power >= MAX_POWER){
+              power = MAX_POWER;
+            }
+            powerTooltip.innerHTML = "Power: " + Math.floor((power / MAX_POWER) * 100) + "%";
+          }, 10);
+        }
       }
     }
   }

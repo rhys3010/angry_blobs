@@ -22,6 +22,10 @@ const SCREEN = {
 };
 
 // Game Constants
-SEC_TO_POWER_CONSTANT = 40;
-MIN_POWER = 0;
-MAX_POWER = 50;
+const SEC_TO_POWER_CONSTANT = 40;
+const MIN_POWER = 0;
+const MAX_POWER = 50;
+// Width, Height and Depth of individual bricks within structure
+const BRICK_W = 2;
+const BRICK_H = 6;
+const BRICK_D = 2;

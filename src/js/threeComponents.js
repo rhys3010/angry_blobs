@@ -14,9 +14,11 @@ var ThreeComponents = (function(){
   // Three.js scene variables
   var camera, scene, renderer;
   // Scene/Game objects
-  var ground, projectile, block, structure, arrow;
+  var ground, projectile, arrow;
   // The origin and direction  of the guiding arrow
   var arrowOrigin, arrowDirection;
+  // Initialize empty bricks list
+  var bricks = [];
 
 
   /* ===== PRIVATE METHODS ===== */
@@ -30,6 +32,71 @@ var ThreeComponents = (function(){
     renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
+  /**
+    * Create the structure of bricks that the player will aim for
+    * @param structure - a 2D Array representing the structure
+  */
+  function createStructure(structure){
+    // Create ThreeJS Geometry and material for the bricks
+    var brickGeometry = new THREE.BoxGeometry(BRICK_W, BRICK_H, BRICK_D);
+    var brickMaterial = new THREE.MeshBasicMaterial({color: 0xcccc00});
+
+    // Iterate through the structure array. Create and position the bricks accordingly
+    // Start right->left, bottom->top
+    // If brick is vertical, the gap between each brick should be 4 (width of brick - height)
+    // If brick is horizontal, the gap between each brick should be 2 (the height of the brick)
+    for(var i = 0; i < structure.length; i++){
+      var layer = structure[i];
+      for(var j = 0; j < layer.length; j++){
+        // Create brick mesh
+        var brick = new Physijs.BoxMesh(brickGeometry, brickMaterial, 1);
+
+        // The horizontal space between bricks
+        var BRICK_SPACING_X;
+
+        // If there is no brick in the layer's slot skip to next iteration
+        if(layer[j] != 0){
+          // Vertical
+          if(layer[j] === 1){
+            // Set the space between the bricks:
+            BRICK_SPACING_X = BRICK_H - BRICK_W;
+            // Work out X position for brick by placing at the far right of the screen (30 + spacing),
+            // then move further away from the edge for each brick after
+            var posX = (30 + BRICK_SPACING_X) - (BRICK_SPACING_X * (j+1));
+            // Work out the Y position for brick by placing on the ground (-9.5), then move upwards depending on the bricks below it
+            // The brick's vertical spacing will vary depending on the orientation of the bricks below it
+            var posY = -9.5 + Util.calculateVerticalBrickSpacing(structure, j, i);
+            // Position brick accordingly
+            brick.position.set(posX, posY, 0);
+          }
+
+          // Horizontal
+          if(layer[j] === 2){
+            // Set the space between the bricks:
+            BRICK_SPACING_X = BRICK_W;
+            // Rotate brick 90 degrees across z-axis to make flat
+            brick.rotation.z = Math.PI / 2;
+            // Work out X position for brick by placing at the far right of the screen (30 + spacing),
+            // then move further away from the edge for each brick after
+            var posX = (30 + BRICK_SPACING_X) - ((BRICK_H - BRICK_W) * (j+1));
+            // Work out the Y position for brick by placing on the ground (-9.5), then move upwards depending on the bricks below it
+            // The brick's vertical spacing will vary depending on the orientation of the bricks below it
+            var posY = (-9.5 - BRICK_W) + Util.calculateVerticalBrickSpacing(structure, j, i);
+
+            // Position brick accordingly
+            brick.position.set(posX, posY, 0);
+          }
+
+          // Mark brick pos as dirty and add to scene
+          brick.__dirtyPosition = true;
+          scene.add(brick);
+          // Add to bricks list
+          bricks.push(brick);
+        }
+      }
+    }
+  }
+
 
   /**
     * Create the geometry, materials and meshes for each of the scene's objects
@@ -37,7 +104,7 @@ var ThreeComponents = (function(){
   function createObjects(){
 
     // Create and position the ground mesh
-    var groundGeometry = new THREE.BoxGeometry(70, 5, 10);
+    var groundGeometry = new THREE.BoxGeometry(70, 5, 60);
     var groundMaterial = new THREE.MeshBasicMaterial({color: 0x228B22});
     ground = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
     // Set the ground to occupy 1/8th of the screen at the bottom
@@ -66,6 +133,20 @@ var ThreeComponents = (function(){
     scene.add(arrow);
   }
 
+  /**
+    * Remove the current structure from the scene to allow the
+    * generation of another.
+  */
+  function removeStructure(){
+    for(var i = 0; i < bricks.length; i++){
+      // Completely remove object from scene
+      scene.remove(bricks[i]);
+      bricks[i].geometry.dispose();
+      bricks[i].material.dispose();
+      bricks[i] = undefined;
+    }
+  }
+
 
   /* ===== PUBLIC METHODS ===== */
 
@@ -80,7 +161,7 @@ var ThreeComponents = (function(){
     scene = new Physijs.Scene();
     camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0, 1000);
     // Move the camera away on the Z-axis to see the whole scene
-    camera.position.set(0, 0, 10);
+    camera.position.set(0, 0, 50);
     camera.zoom = 30;
     camera.updateProjectionMatrix();
 
@@ -114,7 +195,8 @@ var ThreeComponents = (function(){
   }
 
   /**
-    * Initialize the scene by placing all objects in their default positions etc,
+    * Initialize the scene by placing all objects in their default positions
+    * and placing new structure.
   */
   function initScene(){
     // Reset projectile velocity
@@ -130,9 +212,20 @@ var ThreeComponents = (function(){
     // Show arrow
     arrow.visible = true;
 
-    // TODO:
-    // * Remove previous structure blocks
-    // * Pick random structure combo and place
+    // Remove Previous Structure
+    removeStructure();
+
+    // Create a new structure
+    // TEMP
+     var structure = [
+       [1, 1, 1, 1],
+       [2, 0, 2, 0],
+       [0, 2, 0, 0],
+       [0, 1, 1, 0],
+       [0, 2, 0, 0]
+     ];
+    createStructure(structure);
+
 
     // update scene
     scene.updateMatrixWorld(true);
