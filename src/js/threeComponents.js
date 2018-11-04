@@ -55,9 +55,9 @@ var ThreeComponents = (function(){
         var BRICK_SPACING_X;
 
         // If there is no brick in the layer's slot skip to next iteration
-        if(layer[j] != 0){
+        if(layer[j] != BLOCK_EMPTY){
           // Vertical
-          if(layer[j] === 1){
+          if(layer[j] === BLOCK_VERTICAL){
             // Set the space between the bricks:
             BRICK_SPACING_X = BRICK_H - BRICK_W;
             // Work out X position for brick by placing at the far right of the screen (30 + spacing),
@@ -71,7 +71,7 @@ var ThreeComponents = (function(){
           }
 
           // Horizontal
-          if(layer[j] === 2){
+          if(layer[j] === BLOCK_HORIZONTAL){
             // Set the space between the bricks:
             BRICK_SPACING_X = BRICK_W;
             // Rotate brick 90 degrees across z-axis to make flat
@@ -218,11 +218,11 @@ var ThreeComponents = (function(){
     // Create a new structure
     // TEMP
      var structure = [
-       [1, 1, 1, 1],
-       [2, 0, 2, 0],
-       [0, 2, 0, 0],
-       [0, 1, 1, 0],
-       [0, 2, 0, 0]
+       [BLOCK_VERTICAL, BLOCK_VERTICAL, BLOCK_VERTICAL, BLOCK_VERTICAL],
+       [BLOCK_HORIZONTAL, BLOCK_EMPTY, BLOCK_HORIZONTAL, BLOCK_EMPTY],
+       [BLOCK_EMPTY, BLOCK_HORIZONTAL, BLOCK_EMPTY, BLOCK_EMPTY],
+       [BLOCK_EMPTY, BLOCK_VERTICAL, BLOCK_VERTICAL, BLOCK_EMPTY],
+       [BLOCK_EMPTY, BLOCK_HORIZONTAL, BLOCK_EMPTY, BLOCK_EMPTY]
      ];
     createStructure(structure);
 

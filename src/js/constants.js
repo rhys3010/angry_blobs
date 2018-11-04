@@ -21,6 +21,11 @@ const SCREEN = {
   END_SCREEN: document.getElementById('end-container'),
 };
 
+// Block Orientation Constants
+const BLOCK_EMPTY = 0;
+const BLOCK_VERTICAL = 1;
+const BLOCK_HORIZONTAL = 2;
+
 // Game Constants
 const SEC_TO_POWER_CONSTANT = 40;
 const MIN_POWER = 0;
