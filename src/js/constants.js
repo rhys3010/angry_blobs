@@ -23,5 +23,5 @@ const SCREEN = {
 
 // Game Constants
 SEC_TO_POWER_CONSTANT = 40;
-MIN_POWER = 5;
+MIN_POWER = 0;
 MAX_POWER = 50;

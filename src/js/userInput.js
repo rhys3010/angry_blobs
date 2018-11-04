@@ -16,10 +16,11 @@ var UserInput = (function(){
   // Declare all HTML elements
   var startButton = document.getElementById('start-button');
   var restartButton = document.getElementById('restart-button');
-  // Mouse press/release variables to measure power
+
+  // Mouse press/release variable to measure power
   var mousePressed;
-  // Store wether or not the mouse was clicked over an invalid target (i.e. button or radio button)
-  var invalidTarget = false;
+  // Mouse down interval counter to track power in real time
+  var mouseDownInterval = -1;
 
   /* ===== PRIVATE METHODS ===== */
 
@@ -40,48 +41,54 @@ var UserInput = (function(){
     * Handle mouse click to begin timer
   */
   function mouseDown(event){
-    // If the mouse was hovering over a button when clicked, mark as invalid target and return
-    if(event.target.tagName === "A" || event.target.tagName === "BUTTON"){
-      invalidTarget = true;
-      return;
-    }
-
     // Verify that the correct state is selected
-    if(Game.getState() === STATE.PLAY){
+    if(Game.getState() === STATE.PLAY && Game.getCanTakeTurn()){
       mousePressed = new Date();
+
+      // Get current power and display to user
+      if(mouseDownInterval === -1){
+        mouseDownInterval = setInterval(function(){
+          var power = Math.floor((new Date() - mousePressed) / SEC_TO_POWER_CONSTANT);
+
+          // If power has maxed display max value and stop printing
+          if(power >= MAX_POWER){
+            power = MAX_POWER;
+          }
+          console.log(power);
+        }, 50);
+      }
     }
   }
 
   /**
     * Handle mouse click to end timer and calculate power
-    * Minimum Power: 5 (200ms) | Maximum Power: 50 (2000ms)
+    * Maximum Power: 50 (2000ms)
   */
   function mouseUp(){
+    // If a mouseDownInterval was active, stop it
+    if(mouseDownInterval != -1){
+      clearInterval(mouseDownInterval);
+      mouseDownInterval = -1;
+    }
+
     // Verify that the correct state is selected
-    // and that the mouse down event was not over an invalid target
-    if(Game.getState() === STATE.PLAY && !invalidTarget){
+    // and that it is valid for user to take turn
+    if(Game.getState() === STATE.PLAY && Game.getCanTakeTurn()){
       // The power factor
       var power = 0;
       // Calculate how long the mouse was pressed for
       var heldTime = new Date() - mousePressed;
 
-      // If mouse was held for less than 200ms apply minimum power
-      if(heldTime <= 200){
-        power = MIN_POWER;
-        // If mouse was held for longer than 2000ms apply maximum power
-      } else if(heldTime >= 2000){
+      // If mouse was held for longer than 2000ms apply maximum power
+      if(heldTime >= MAX_POWER * SEC_TO_POWER_CONSTANT){
         power = MAX_POWER;
-        // If power was between 200 - 2000 work out using sec -> power constant
+      // If power was less than 2000 work out using sec -> power constant
       } else{
         power = heldTime / SEC_TO_POWER_CONSTANT;
       }
-
-
       // Pass power to game logic module
       Game.takeTurn(power);
     }
-
-    invalidTarget = false;
   }
 
   /* ===== PUBLIC METHODS ===== */

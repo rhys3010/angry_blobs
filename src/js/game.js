@@ -139,6 +139,10 @@ var Game = (function(){
     canTakeTurn = false;
   }
 
+  function getCanTakeTurn(){
+    return canTakeTurn;
+  }
+
 
   /* ===== EXPORT PUBLIC METHODS ===== */
 
@@ -148,5 +152,6 @@ var Game = (function(){
     startGame: startGame,
     endGame: endGame,
     takeTurn: takeTurn,
+    getCanTakeTurn: getCanTakeTurn,
   };
 }());
