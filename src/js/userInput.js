@@ -16,6 +16,7 @@ var UserInput = (function(){
   // Declare all HTML elements
   var startButton = document.getElementById('start-button');
   var restartButton = document.getElementById('restart-button');
+  var menuButton = document.getElementById('menu-button');
   var powerTooltip = document.getElementById('power-tooltip');
 
   // Mouse press/release variable to measure power
@@ -123,6 +124,11 @@ var UserInput = (function(){
     // Bind Restart button event
     restartButton.onclick = function(){
       Game.startGame();
+    }
+
+    // Bind Menu Button event
+    menuButton.onclick = function(){
+      Game.changeState(STATE.START);
     }
 
     // Bind mousemove event
