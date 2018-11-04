@@ -13,12 +13,13 @@ var UserInput = (function(){
 
   'use strict';
 
-  // Declare all buttons
+  // Declare all HTML elements
   var startButton = document.getElementById('start-button');
   var restartButton = document.getElementById('restart-button');
-
   // Mouse press/release variables to measure power
   var mousePressed;
+  // Store wether or not the mouse was clicked over an invalid target (i.e. button or radio button)
+  var invalidTarget = false;
 
   /* ===== PRIVATE METHODS ===== */
 
@@ -38,7 +39,13 @@ var UserInput = (function(){
   /**
     * Handle mouse click to begin timer
   */
-  function mouseDown(){
+  function mouseDown(event){
+    // If the mouse was hovering over a button when clicked, mark as invalid target and return
+    if(event.target.tagName === "A" || event.target.tagName === "BUTTON"){
+      invalidTarget = true;
+      return;
+    }
+
     // Verify that the correct state is selected
     if(Game.getState() === STATE.PLAY){
       mousePressed = new Date();
@@ -51,7 +58,8 @@ var UserInput = (function(){
   */
   function mouseUp(){
     // Verify that the correct state is selected
-    if(Game.getState() === STATE.PLAY){
+    // and that the mouse down event was not over an invalid target
+    if(Game.getState() === STATE.PLAY && !invalidTarget){
       // The power factor
       var power = 0;
       // Calculate how long the mouse was pressed for
@@ -68,9 +76,12 @@ var UserInput = (function(){
         power = heldTime / SEC_TO_POWER_CONSTANT;
       }
 
+
       // Pass power to game logic module
       Game.takeTurn(power);
     }
+
+    invalidTarget = false;
   }
 
   /* ===== PUBLIC METHODS ===== */

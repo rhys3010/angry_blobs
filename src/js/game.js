@@ -58,6 +58,14 @@ var Game = (function(){
     }
   }
 
+  /**
+    * Initialize the game state to begin a new game
+  */
+  function initGameState(){
+    ThreeComponents.initScene();
+    canTakeTurn = true;
+  }
+
 
   /* ===== PUBLIC METHODS ===== */
 
@@ -110,7 +118,7 @@ var Game = (function(){
   */
   function startGame(){
     changeState(STATE.PLAY);
-    ThreeComponents.initScene();
+    initGameState();
   }
 
   /**

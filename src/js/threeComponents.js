@@ -94,6 +94,8 @@ var ThreeComponents = (function(){
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
+    // Assign ID to renderer's dom element - for reference in userInput module
+    renderer.domElement.id = 'game-canvas';
     SCREEN.GAME_SCREEN.appendChild(renderer.domElement);
 
     // Handle window resizing
@@ -115,6 +117,9 @@ var ThreeComponents = (function(){
     * Initialize the scene by placing all objects in their default positions etc,
   */
   function initScene(){
+    // Reset projectile velocity
+    projectile.setLinearVelocity(new THREE.Vector3(0, 0, 0));
+    projectile.setAngularVelocity(new THREE.Vector3(0, 0, 0));
 
     // Set reusable Object positions to default
     ground.position.set(0, -15, 0)
@@ -122,8 +127,6 @@ var ThreeComponents = (function(){
     projectile.position.set(-30, -11.5, 0);
     projectile.__dirtyPosition = true;
 
-    // Reset projectile velocity
-    projectile.setLinearVelocity(new THREE.Vector3(0, 0, 0));
     // Show arrow
     arrow.visible = true;
 
@@ -168,7 +171,6 @@ var ThreeComponents = (function(){
   */
   function launchProjectile(power){
     projectile.setLinearVelocity(arrowDirection.multiplyScalar(power));
-
     // Hide arrow
     arrow.visible = false;
   }
