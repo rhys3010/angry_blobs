@@ -143,8 +143,9 @@ var ThreeComponents = (function(){
       scene.remove(bricks[i]);
       bricks[i].geometry.dispose();
       bricks[i].material.dispose();
-      bricks[i] = undefined;
     }
+    // Empty the bricks list
+    bricks = [];
   }
 
 

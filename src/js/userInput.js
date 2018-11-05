@@ -131,6 +131,11 @@ var UserInput = (function(){
       Game.changeState(STATE.START);
     }
 
+    // TEMP Re-init button
+    document.getElementById('reinit-button').onclick = function(){
+      Game.startGame();
+    }
+
     // Bind mousemove event
     $(document).on("mousemove", mouseMove);
 

@@ -73,6 +73,12 @@
   -ms-user-select: none;
 }
 
+#reinit-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 #end-container {
   background-color: #544742;
   display: block;
