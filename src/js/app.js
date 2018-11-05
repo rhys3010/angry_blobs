@@ -8,7 +8,7 @@
 
 $(document).ready(function(){
   // Set initial state
-  Game.changeState(STATE.END);
+  Game.changeState(STATE.START);
   // Create Three.js scene and render it
   ThreeComponents.create();
   ThreeComponents.render();

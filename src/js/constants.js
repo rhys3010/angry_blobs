@@ -34,3 +34,26 @@ const MAX_POWER = 50;
 const BRICK_W = 2;
 const BRICK_H = 6;
 const BRICK_D = 2;
+
+/**
+  * Definitions for the available structure layouts
+  * Structures are drawn right -> left, bottom->top.
+  * Therefore the first element in the array is the bottom right block in the structure
+  * For example the following array: [1, 2, 2]. Would generate the below structure:
+  * _ _|
+*/
+const STRUCTURES = [
+  // Structure #1
+  [
+    [1, 1, 1, 1],
+    [2, 0, 2, 0],
+    [0, 2, 0, 0],
+    [0, 1, 1, 0],
+    [0, 2, 0, 0]
+  ],
+  // Structure #2
+  [
+    [1, 1, 0],
+    [2, 0, 0]
+  ]
+];

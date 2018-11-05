@@ -17,7 +17,7 @@ var ThreeComponents = (function(){
   var ground, projectile, arrow;
   // The origin and direction  of the guiding arrow
   var arrowOrigin, arrowDirection;
-  // Initialize empty bricks list
+  // Initialize empty bricks list to store threejs meshes
   var bricks = [];
 
 
@@ -197,8 +197,9 @@ var ThreeComponents = (function(){
   /**
     * Initialize the scene by placing all objects in their default positions
     * and placing new structure.
+    * @param structure - the definintion for the structure to be displayed
   */
-  function initScene(){
+  function initScene(structure){
     // Reset projectile velocity
     projectile.setLinearVelocity(new THREE.Vector3(0, 0, 0));
     projectile.setAngularVelocity(new THREE.Vector3(0, 0, 0));
@@ -215,17 +216,8 @@ var ThreeComponents = (function(){
     // Remove Previous Structure
     removeStructure();
 
-    // Create a new structure
-    // TEMP
-     var structure = [
-       [BLOCK_VERTICAL, BLOCK_VERTICAL, BLOCK_VERTICAL, BLOCK_VERTICAL],
-       [BLOCK_HORIZONTAL, BLOCK_EMPTY, BLOCK_HORIZONTAL, BLOCK_EMPTY],
-       [BLOCK_EMPTY, BLOCK_HORIZONTAL, BLOCK_EMPTY, BLOCK_EMPTY],
-       [BLOCK_EMPTY, BLOCK_VERTICAL, BLOCK_VERTICAL, BLOCK_EMPTY],
-       [BLOCK_EMPTY, BLOCK_HORIZONTAL, BLOCK_EMPTY, BLOCK_EMPTY]
-     ];
+    // Generate the provided structure
     createStructure(structure);
-
 
     // update scene
     scene.updateMatrixWorld(true);

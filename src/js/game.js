@@ -17,52 +17,22 @@ var Game = (function(){
   var currentState = STATE.INVALID;
   // Boolean value to store wether it is valid for the user to take a turn
   var canTakeTurn = true;
+  // Store the currently used structure for both player and bot turn
+  var currentStructure;
 
 
   /* ===== PRIVATE METHODS ===== */
 
   /**
-    * Change the currently displayed screen by hiding/showing various DOM Elements. Screen is bound to current state
-    * @param newScreen
-  */
-  function changeScreen(newScreen){
-    var info = document.getElementById('info');
-
-    // Hide all Screens
-    $(SCREEN.START_SCREEN).hide();
-    $(SCREEN.GAME_SCREEN).hide();
-    $(SCREEN.END_SCREEN).hide();
-
-    // Show newScreen
-    switch(newScreen){
-      case SCREEN.START_SCREEN:
-        $(SCREEN.START_SCREEN).show();
-        $(SCREEN.START_SCREEN).removeAttr("hidden");
-        // Show info
-        $(info).show();
-        break;
-      case SCREEN.GAME_SCREEN:
-        $(SCREEN.GAME_SCREEN).show();
-        $(SCREEN.GAME_SCREEN).removeAttr("hidden");
-        // Hide info
-        $(info).hide();
-        break;
-      case SCREEN.END_SCREEN:
-        $(SCREEN.END_SCREEN).show();
-        $(SCREEN.END_SCREEN).removeAttr("hidden");
-        // Show info
-        $(info).show();
-        break;
-      default:
-        $(SCREEN.START_SCREEN).show();
-    }
-  }
-
-  /**
-    * Initialize the game state to begin a new game
+    * Initialize the game state to ensure the game is ready for a new turn
   */
   function initGameState(){
-    ThreeComponents.initScene();
+    // Choose a new (random) structure
+    // TODO: Only choose new structure if new turn
+    currentStructure = STRUCTURES[Math.floor(Math.random() * STRUCTURES.length)];
+
+    // Initialize Scene ready for next turn
+    ThreeComponents.initScene(currentStructure);
     canTakeTurn = true;
   }
 
@@ -85,13 +55,13 @@ var Game = (function(){
     // Update screen to represent new state
     switch(newState){
       case STATE.START:
-        changeScreen(SCREEN.START_SCREEN);
+        Util.changeScreen(SCREEN.START_SCREEN);
         break;
       case STATE.PLAY:
-        changeScreen(SCREEN.GAME_SCREEN);
+        Util.changeScreen(SCREEN.GAME_SCREEN);
         break;
       case STATE.END:
-        changeScreen(SCREEN.END_SCREEN);
+        Util.changeScreen(SCREEN.END_SCREEN);
         break;
       case STATE_INVALID:
         console.error("Invalid State: Please Restart.");
@@ -139,9 +109,13 @@ var Game = (function(){
     canTakeTurn = false;
   }
 
+  /**
+    * Gets wether or not the user can take a turn
+  */
   function getCanTakeTurn(){
     return canTakeTurn;
   }
+
 
 
   /* ===== EXPORT PUBLIC METHODS ===== */
