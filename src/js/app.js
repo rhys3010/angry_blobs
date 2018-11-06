@@ -9,8 +9,9 @@
 $(document).ready(function(){
   // Set initial state
   Game.changeState(STATE.START);
-  // Create Three.js scene and render it
+  // Create Three.js scene
   ThreeComponents.create();
+  // Render three.js scene
   ThreeComponents.render();
   // Initialize user input module
   UserInput.init();

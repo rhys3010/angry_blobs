@@ -23,6 +23,8 @@ var UserInput = (function(){
   var mousePressed;
   // Mouse down interval counter to track power in real time
   var mouseDownInterval = -1;
+  // Store current power
+  var power = 0;
 
   /* ===== PRIVATE METHODS ===== */
 
@@ -63,12 +65,8 @@ var UserInput = (function(){
         // Get current power and display on indicator
         if(mouseDownInterval === -1){
           mouseDownInterval = setInterval(function(){
-            var power = Math.floor((new Date() - mousePressed) / SEC_TO_POWER_CONSTANT);
+            power = Math.floor((new Date() - mousePressed) / SEC_TO_POWER_CONSTANT) % MAX_POWER;
 
-            // If power has maxed display max value and stop printing
-            if(power >= MAX_POWER){
-              power = MAX_POWER;
-            }
             powerTooltip.innerHTML = "Power: " + Math.floor((power / MAX_POWER) * 100) + "%";
           }, 10);
         }
@@ -90,23 +88,12 @@ var UserInput = (function(){
     // Verify that the correct state is selected
     // and that it is valid for user to take turn
     if(Game.getState() === STATE.PLAY && Game.getCanTakeTurn()){
-      // The power factor
-      var power = 0;
-      // Calculate how long the mouse was pressed for
-      var heldTime = new Date() - mousePressed;
-
       // Hide power indicator
       powerTooltip.style.display = 'none';
-
-      // If mouse was held for longer than 2000ms apply maximum power
-      if(heldTime >= MAX_POWER * SEC_TO_POWER_CONSTANT){
-        power = MAX_POWER;
-      // If power was less than 2000 work out using sec -> power constant
-      } else{
-        power = heldTime / SEC_TO_POWER_CONSTANT;
-      }
       // Pass power to game logic module
       Game.takeTurn(power);
+      // Reset power
+      power = 0;
     }
   }
 

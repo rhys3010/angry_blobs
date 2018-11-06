@@ -76,6 +76,7 @@ var ThreeComponents = (function(){
             BRICK_SPACING_X = BRICK_W;
             // Rotate brick 90 degrees across z-axis to make flat
             brick.rotation.z = Math.PI / 2;
+            brick.__dirtyRotation = true;
             // Work out X position for brick by placing at the far right of the screen (30 + spacing),
             // then move further away from the edge for each brick after
             var posX = (30 + BRICK_SPACING_X) - ((BRICK_H - BRICK_W) * (j+1));
@@ -112,7 +113,7 @@ var ThreeComponents = (function(){
     ground.__dirtyPosition = true;
 
     // Create and position projectile mesh
-    var projectileGeometry = new THREE.SphereGeometry(1, 10, 10);
+    var projectileGeometry = new THREE.SphereGeometry(1, 20, 20);
     var projectileMaterial = new THREE.MeshBasicMaterial({color: 0x3342FF});
     projectile = new Physijs.SphereMesh(projectileGeometry, projectileMaterial, 1);
     // Set the initial position of the projectile
@@ -144,6 +145,7 @@ var ThreeComponents = (function(){
       bricks[i].geometry.dispose();
       bricks[i].material.dispose();
     }
+
     // Empty the bricks list
     bricks = [];
   }
@@ -160,6 +162,15 @@ var ThreeComponents = (function(){
     Physijs.scripts.ammo = "../../vendor/physijs/ammo.js";
 
     scene = new Physijs.Scene();
+    // Bind scene.simulate() to run independently of scene rendering
+    scene.addEventListener(
+      'update',
+      function(){
+        scene.simulate();
+      }
+    );
+    scene.simulate();
+
     camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0, 1000);
     // Move the camera away on the Z-axis to see the whole scene
     camera.position.set(0, 0, 50);
@@ -188,8 +199,6 @@ var ThreeComponents = (function(){
     * Render the scene
   */
   function render(){
-    // Physijs simulatoins
-    scene.simulate();
     camera.lookAt(scene.position);
     renderer.render(scene, camera);
     requestAnimationFrame(render);
@@ -206,8 +215,6 @@ var ThreeComponents = (function(){
     projectile.setAngularVelocity(new THREE.Vector3(0, 0, 0));
 
     // Set reusable Object positions to default
-    ground.position.set(0, -15, 0)
-    ground.__dirtyPosition = true;
     projectile.position.set(-30, -11.5, 0);
     projectile.__dirtyPosition = true;
 

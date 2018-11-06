@@ -19,7 +19,9 @@ var Game = (function(){
   var canTakeTurn = true;
   // Store the currently used structure for both player and bot turn
   var currentStructure;
-
+  // Keep track of scores
+  var playerScore = 0;
+  var botScore = 0;
 
   /* ===== PRIVATE METHODS ===== */
 
@@ -35,7 +37,6 @@ var Game = (function(){
     ThreeComponents.initScene(currentStructure);
     canTakeTurn = true;
   }
-
 
   /* ===== PUBLIC METHODS ===== */
 
@@ -76,13 +77,7 @@ var Game = (function(){
   function getState(){
     return currentState;
   }
-  /**
-    * Gets the current state of the game
-    * @returns currentState
-  */
-  function getState(){
-    return currentState;
-  }
+
   /**
     * Start the game by initializing components and updating the state machine.
   */
@@ -115,8 +110,6 @@ var Game = (function(){
   function getCanTakeTurn(){
     return canTakeTurn;
   }
-
-
 
   /* ===== EXPORT PUBLIC METHODS ===== */
 
