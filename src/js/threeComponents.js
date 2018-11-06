@@ -14,7 +14,7 @@ var ThreeComponents = (function(){
   // Three.js scene variables
   var camera, scene, renderer;
   // Scene/Game objects
-  var ground, projectile, arrow;
+  var ground, projectile, arrow, boundary;
   // The origin and direction  of the guiding arrow
   var arrowOrigin, arrowDirection;
   // Initialize empty bricks list to store threejs meshes
@@ -98,11 +98,19 @@ var ThreeComponents = (function(){
     }
   }
 
-
   /**
     * Create the geometry, materials and meshes for each of the scene's objects
   */
   function createObjects(){
+
+    // Create invisible scene boundary to detect projectile collisions
+    var boundaryGeometry = new THREE.BoxGeometry(1000, 0.5, 100);
+    var boundaryMaterial = new THREE.MeshBasicMaterial({color: 0xff0000});
+
+    boundary = new Physijs.BoxMesh(boundaryGeometry, boundaryMaterial, 0);
+    boundary.position.set(0, -30, 0);
+    boundary.__dirtyPosition = true;
+    boundary.visible = false;
 
     // Create and position the ground mesh
     var groundGeometry = new THREE.BoxGeometry(70, 5, 60);
@@ -120,7 +128,8 @@ var ThreeComponents = (function(){
     projectile.position.set(-30, -11.5, 0);
     projectile.__dirtyPosition = true;
 
-    // Add Ground and Projectile to scene
+    // Add boundary and game objects to scene
+    scene.add(boundary);
     scene.add(ground);
     scene.add(projectile);
     scene.updateMatrixWorld(true);
@@ -130,7 +139,6 @@ var ThreeComponents = (function(){
     arrowOrigin = projectilePosition.setFromMatrixPosition(projectile.matrixWorld);
     // Face arrow forwards by default
     arrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0).normalize(), arrowOrigin, 3, 0xffffff, 0.6, 0.3);
-
     scene.add(arrow);
   }
 
