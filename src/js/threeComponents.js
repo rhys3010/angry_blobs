@@ -264,7 +264,7 @@ var ThreeComponents = (function(){
     * @param power
   */
   function launchProjectile(power){
-    projectile.setLinearVelocity(arrowDirection.multiplyScalar(power));
+    projectile.applyCentralImpulse(arrowDirection.multiplyScalar(power));
     // Hide arrow
     arrow.visible = false;
   }

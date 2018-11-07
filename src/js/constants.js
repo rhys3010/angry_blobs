@@ -29,6 +29,11 @@ const MAX_POWER = 50;
 // Object Constants
 const PROJECTILE_MASS = 1;
 const PROJECTILE_RADIUS = 1;
+const PROJECTILE_FRICTION = 0;
+const PROJECTILE_RESTITUTION = 0;
+
+const GROUND_FRICTION = 0;
+const GROUND_RESTITUTION = 0;
 
 // Brick Constants
 const BRICK_MASS = 1;
@@ -64,13 +69,25 @@ const STRUCTURES = [
   ],
   // Structure #3
   [
+    [2, 0, 2, 0],
     [1, 1, 1, 1],
-    [2, 0, 1, 0]
+    [0, 2, 0, 0],
+    [0, 1, 1, 0]
   ],
   // Structure #4
   [
+    [1, 1],
+    [2, 0],
+    [1, 1],
+    [2, 0],
+    [1, 1],
+    [2, 0]
+  ],
+  // Structure #5
+  [
     [1, 1, 1],
-    [1, 2, 0],
-    [0, 1, 1]
+    [2, 0, 0],
+    [0, 1, 1],
+    [0, 2, 0]
   ]
 ];
