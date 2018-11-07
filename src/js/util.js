@@ -59,7 +59,7 @@ var Util = (function(){
     var spacing = 0;
 
     // If indexY = 0, brick is on the bottom layer and therefore doesnt need spacing
-    if(indexY === BLOCK_EMPTY){
+    if(indexY === BRICK_EMPTY){
       return 0;
     }
 
@@ -67,14 +67,14 @@ var Util = (function(){
     // increment the required spacing based on the orientation of the bricks below the subject brick
     for(var i = 0; i < indexY; i++){
       // If slot contains vertical block
-      if(structure[i][indexX] === BLOCK_VERTICAL){
+      if(structure[i][indexX] === BRICK_VERTICAL){
         // Increment spacing by HEIGHT of brick
         spacing += BRICK_H;
       }
       // If slot contains horizontal block
       // (or if slot immediately to the left contains horizontal block) ...
       // blocks are always laid leftwards from position and occupy two slots
-      if(structure[i][indexX] === BLOCK_HORIZONTAL || structure[i][indexX-1] === BLOCK_HORIZONTAL){
+      if(structure[i][indexX] === BRICK_HORIZONTAL || structure[i][indexX-1] === BRICK_HORIZONTAL){
         // Increment spacing by WIDTH of brick
         spacing += BRICK_W;
       }

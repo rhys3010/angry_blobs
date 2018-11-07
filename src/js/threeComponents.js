@@ -49,14 +49,14 @@ var ThreeComponents = (function(){
       var layer = structure[i];
       for(var j = 0; j < layer.length; j++){
         // Create brick mesh
-        var brick = new Physijs.BoxMesh(brickGeometry, brickMaterial, 1);
+        var brick = new Physijs.BoxMesh(brickGeometry, brickMaterial, BRICK_MASS);
         // The horizontal space between bricks so that there is room for horizontal bridge above
         var BRICK_SPACING_X = BRICK_H - BRICK_W;
 
         // If there is no brick in the layer's slot skip to next iteration
-        if(layer[j] != BLOCK_EMPTY){
+        if(layer[j] != BRICK_EMPTY){
           // Vertical
-          if(layer[j] === BLOCK_VERTICAL){
+          if(layer[j] === BRICK_VERTICAL){
             // Set the X position of the brick so that it stands with the correct spacing (multiplied depending on number of bricks in row)
             var posX = (30 + BRICK_SPACING_X) - (BRICK_SPACING_X * (j + 1));
             // Set the Y position of the brick to stand on the ground (this will be relative to the brick's height)
@@ -67,7 +67,7 @@ var ThreeComponents = (function(){
           }
 
           // Horizontal
-          if(layer[j] === BLOCK_HORIZONTAL){
+          if(layer[j] === BRICK_HORIZONTAL){
             // Rotate brick 90 degrees across z-axis to make flat
             brick.rotation.z = Math.PI / 2;
             brick.__dirtyRotation = true;
@@ -114,11 +114,11 @@ var ThreeComponents = (function(){
     ground.__dirtyPosition = true;
 
     // Create and position projectile mesh
-    var projectileGeometry = new THREE.SphereGeometry(1, 20, 20);
+    var projectileGeometry = new THREE.SphereGeometry(PROJECTILE_RADIUS, 20, 20);
     var projectileMaterial = new THREE.MeshBasicMaterial({color: 0x3342FF});
-    projectile = new Physijs.SphereMesh(projectileGeometry, projectileMaterial, 1);
+    projectile = new Physijs.SphereMesh(projectileGeometry, projectileMaterial, PROJECTILE_MASS);
     // Set the initial position of the projectile
-    projectile.position.set(-30, -11.5, 0);
+    projectile.position.set(-30, (ground.position.y + ground.geometry.parameters.height / 2) + PROJECTILE_RADIUS, 0);
     projectile.__dirtyPosition = true;
 
     // Add boundary and game objects to scene
@@ -216,7 +216,7 @@ var ThreeComponents = (function(){
     projectile.setAngularVelocity(new THREE.Vector3(0, 0, 0));
 
     // Set reusable Object positions to default
-    projectile.position.set(-30, -11.5, 0);
+    projectile.position.set(-30, (ground.position.y + ground.geometry.parameters.height / 2) + PROJECTILE_RADIUS, 0);
     projectile.__dirtyPosition = true;
 
     // Show arrow

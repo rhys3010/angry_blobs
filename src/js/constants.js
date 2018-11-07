@@ -21,15 +21,21 @@ const SCREEN = {
   END_SCREEN: document.getElementById('end-container'),
 };
 
-// Block Orientation Constants
-const BLOCK_EMPTY = 0;
-const BLOCK_VERTICAL = 1;
-const BLOCK_HORIZONTAL = 2;
-
 // Game Constants
 const SEC_TO_POWER_CONSTANT = 40;
 const MIN_POWER = 0;
 const MAX_POWER = 50;
+
+// Object Constants
+const PROJECTILE_MASS = 1;
+const PROJECTILE_RADIUS = 1;
+
+// Brick Constants
+const BRICK_MASS = 1;
+// Orientation
+const BRICK_EMPTY = 0;
+const BRICK_VERTICAL = 1;
+const BRICK_HORIZONTAL = 2;
 // Width, Height and Depth of individual bricks within structure
 const BRICK_W = 1;
 const BRICK_H = 5;
