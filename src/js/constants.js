@@ -31,9 +31,9 @@ const SEC_TO_POWER_CONSTANT = 40;
 const MIN_POWER = 0;
 const MAX_POWER = 50;
 // Width, Height and Depth of individual bricks within structure
-const BRICK_W = 2;
-const BRICK_H = 6;
-const BRICK_D = 2;
+const BRICK_W = 1;
+const BRICK_H = 5;
+const BRICK_D = 1;
 
 /**
   * Definitions for the available structure layouts

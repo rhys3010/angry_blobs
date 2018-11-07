@@ -50,39 +50,32 @@ var ThreeComponents = (function(){
       for(var j = 0; j < layer.length; j++){
         // Create brick mesh
         var brick = new Physijs.BoxMesh(brickGeometry, brickMaterial, 1);
-
-        // The horizontal space between bricks
-        var BRICK_SPACING_X;
+        // The horizontal space between bricks so that there is room for horizontal bridge above
+        var BRICK_SPACING_X = BRICK_H - BRICK_W;
 
         // If there is no brick in the layer's slot skip to next iteration
         if(layer[j] != BLOCK_EMPTY){
           // Vertical
           if(layer[j] === BLOCK_VERTICAL){
-            // Set the space between the bricks:
-            BRICK_SPACING_X = BRICK_H - BRICK_W;
-            // Work out X position for brick by placing at the far right of the screen (30 + spacing),
-            // then move further away from the edge for each brick after
-            var posX = (30 + BRICK_SPACING_X) - (BRICK_SPACING_X * (j+1));
-            // Work out the Y position for brick by placing on the ground (-9.5), then move upwards depending on the bricks below it
-            // The brick's vertical spacing will vary depending on the orientation of the bricks below it
-            var posY = -9.5 + Util.calculateVerticalBrickSpacing(structure, j, i);
+            // Set the X position of the brick so that it stands with the correct spacing (multiplied depending on number of bricks in row)
+            var posX = (30 + BRICK_SPACING_X) - (BRICK_SPACING_X * (j + 1));
+            // Set the Y position of the brick to stand on the ground (this will be relative to the brick's height)
+            // Then increment the y position depending on the blocks that lay below it (util function)
+            var posY = (ground.position.y + ground.geometry.parameters.height / 2) + (BRICK_H - BRICK_H / 2) + Util.calculateVerticalBrickSpacing(structure, j, i);
             // Position brick accordingly
             brick.position.set(posX, posY, 0);
           }
 
           // Horizontal
           if(layer[j] === BLOCK_HORIZONTAL){
-            // Set the space between the bricks:
-            BRICK_SPACING_X = BRICK_W;
             // Rotate brick 90 degrees across z-axis to make flat
             brick.rotation.z = Math.PI / 2;
             brick.__dirtyRotation = true;
-            // Work out X position for brick by placing at the far right of the screen (30 + spacing),
-            // then move further away from the edge for each brick after
-            var posX = (30 + BRICK_SPACING_X) - ((BRICK_H - BRICK_W) * (j+1));
-            // Work out the Y position for brick by placing on the ground (-9.5), then move upwards depending on the bricks below it
-            // The brick's vertical spacing will vary depending on the orientation of the bricks below it
-            var posY = (-9.5 - BRICK_W) + Util.calculateVerticalBrickSpacing(structure, j, i);
+            // Position the horizontal brick such that it's rightmost point is equal to a vertical brick's
+            var posX = (30 + BRICK_SPACING_X) - (BRICK_H / 2 - BRICK_W / 2) - (BRICK_SPACING_X * (j + 1));
+            // Set the Y position of the brick to stand on the ground (this will be relative to the brick's width)
+            // Then increment the y position depending on the blocks that lay below it (util function)
+            var posY = (ground.position.y + ground.geometry.parameters.height / 2) + (BRICK_W - BRICK_W / 2) + Util.calculateVerticalBrickSpacing(structure, j, i);
 
             // Position brick accordingly
             brick.position.set(posX, posY, 0);
