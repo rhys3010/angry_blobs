@@ -102,11 +102,11 @@ var ThreeComponents = (function(){
     * Create the geometry, materials and meshes for each of the scene's objects
   */
   function createObjects(){
-
     // Create invisible scene boundary to detect projectile collisions
     var boundaryGeometry = new THREE.BoxGeometry(1000, 0.5, 100);
     var boundaryMaterial = new THREE.MeshBasicMaterial({color: 0xff0000});
 
+    // Place boundary below the scene and make invisible
     boundary = new Physijs.BoxMesh(boundaryGeometry, boundaryMaterial, 0);
     boundary.position.set(0, -30, 0);
     boundary.__dirtyPosition = true;
