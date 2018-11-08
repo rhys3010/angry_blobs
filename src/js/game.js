@@ -56,7 +56,7 @@ var Game = (function(){
   */
   function shouldTurnEnd(turnStartTime){
     // Turn should end if any of the following conditions are met
-    // > Projectile collides with boundary
+    // > Projectile collides with boundary (handled by collision system)
     // > Projectile is static
     // > Turn has lasted more than X Seconds
     return ThreeComponents.isProjectileStatic() || (new Date() - turnStartTime) > MAX_TURN_LENGTH;
@@ -143,9 +143,7 @@ var Game = (function(){
     shouldTurnEndInterval = setInterval(function(){
       // If turn should end, wait X seconds and end turn
       if(shouldTurnEnd(turnStartTime)){
-        turnEndDelay = setTimeout(endTurn, TURN_END_DELAY);
-        // Clear Self
-        clearInterval(shouldTurnEndInterval);
+        endTurn();
       }
     }, 100);
   }
@@ -154,26 +152,42 @@ var Game = (function(){
    * End a turn by changing to bot/player and incrementing round if needed
   */
   function endTurn(){
-    // Store whether or not the game has entered a new round
-    var newRound = false;
-    // If it was a bot's turn
-    if(playerTurn){
-      // After bot takes turn round must increment
-      roundNo++;
-      newRound = true;
-    }
-
-    // If game is finished
-    if(roundNo > MAX_ROUNDS){
-      endGame();
-    }else{
-      // Get the game scene ready
-      initGameState(newRound);
-      // If next turn is bot's take the turn
-      if(!playerTurn){
-        // Wait 1 sec before bot launches
-        botTurnDelay = setTimeout(takeTurn, 2000, 40);
+    // Clear End Turn Interval
+    clearInterval(shouldTurnEndInterval);
+    // Wait X seconds before ending turn
+    turnEndDelay = setTimeout(function(){
+      // Store whether or not the game has entered a new round
+      var newRound = false;
+      // If it was a bot's turn
+      if(playerTurn){
+        // After bot takes turn round must increment
+        roundNo++;
+        newRound = true;
       }
+
+      // If game is finished
+      if(roundNo > MAX_ROUNDS){
+        endGame();
+      }else{
+        // Get the game scene ready
+        initGameState(newRound);
+        // If next turn is bot's take the turn
+        if(!playerTurn){
+          // Wait 1 sec before bot launches
+          botTurnDelay = setTimeout(takeTurn, 2000, 40);
+        }
+      }
+    }, TURN_END_DELAY);
+  }
+
+  /**
+    * Handle all projectile collisions
+    * @param other_object
+  */
+  function handleProjectileCollision(other_object){
+    // If projectile has collided with outer boundary, end the turn
+    if(other_object.name === "BOUNDARY"){
+      endTurn();
     }
   }
 
@@ -194,5 +208,6 @@ var Game = (function(){
     takeTurn: takeTurn,
     isPlayerTurn: isPlayerTurn,
     endTurn: endTurn,
+    handleProjectileCollision: handleProjectileCollision,
   };
 }());
