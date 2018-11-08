@@ -154,30 +154,32 @@ var Game = (function(){
   function endTurn(){
     // Clear End Turn Interval
     clearInterval(shouldTurnEndInterval);
-    // Wait X seconds before ending turn
-    turnEndDelay = setTimeout(function(){
-      // Store whether or not the game has entered a new round
-      var newRound = false;
-      // If it was a bot's turn
-      if(playerTurn){
-        // After bot takes turn round must increment
-        roundNo++;
-        newRound = true;
-      }
-
-      // If game is finished
-      if(roundNo > MAX_ROUNDS){
-        endGame();
-      }else{
-        // Get the game scene ready
-        initGameState(newRound);
-        // If next turn is bot's take the turn
-        if(!playerTurn){
-          // Wait 1 sec before bot launches
-          botTurnDelay = setTimeout(takeTurn, 2000, 40);
+    // Ensure that all below code is only ran once
+    if(!turnEndDelay){
+      // Wait X seconds before ending turn
+      turnEndDelay = setTimeout(function(){
+        // Store whether or not the game has entered a new round
+        var newRound = false;
+        // If it was a bot's turn
+        if(playerTurn){
+          // After bot takes turn round must increment
+          roundNo++;
+          newRound = true;
         }
-      }
-    }, TURN_END_DELAY);
+        // If game is finished
+        if(roundNo > MAX_ROUNDS){
+          endGame();
+        }else{
+          // Get the game scene ready
+          initGameState(newRound);
+          // If next turn is bot's take the turn
+          if(!playerTurn){
+            // Wait 1 sec before bot launches
+            botTurnDelay = setTimeout(takeTurn, 2000, 40);
+          }
+        }
+      }, TURN_END_DELAY);
+    }
   }
 
   /**

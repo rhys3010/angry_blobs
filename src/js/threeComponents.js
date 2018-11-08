@@ -103,7 +103,7 @@ var ThreeComponents = (function(){
     // Place boundary below the scene and make invisible
     boundary = new Physijs.BoxMesh(boundaryGeometry, boundaryMaterial, 0);
     boundary.name = "BOUNDARY";
-    boundary.position.set(0, -20, 0);
+    boundary.position.set(0, -13, 0);
     boundary.__dirtyPosition = true;
     boundary.visible = false;
 
