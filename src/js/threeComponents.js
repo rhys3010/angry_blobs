@@ -264,7 +264,10 @@ var ThreeComponents = (function(){
     * @param power
   */
   function launchProjectile(power){
+    // Multiply arrow direction vector by power
     projectile.applyCentralImpulse(arrowDirection.multiplyScalar(power));
+    // Reset Arrow Direction to default position
+    arrowDirection = new THREE.Vector3(0.5, 0.3, 0);
     // Hide arrow
     arrow.visible = false;
   }

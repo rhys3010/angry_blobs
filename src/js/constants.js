@@ -25,6 +25,7 @@ const SCREEN = {
 const SEC_TO_POWER_CONSTANT = 40;
 const MIN_POWER = 0;
 const MAX_POWER = 50;
+const MAX_ROUNDS = 3;
 
 // Object Constants
 const PROJECTILE_MASS = 1;
@@ -36,15 +37,15 @@ const GROUND_FRICTION = 0;
 const GROUND_RESTITUTION = 0;
 
 // Brick Constants
-const BRICK_MASS = 1;
+const BRICK_MASS = 3;
 // Orientation
 const BRICK_EMPTY = 0;
 const BRICK_VERTICAL = 1;
 const BRICK_HORIZONTAL = 2;
 // Width, Height and Depth of individual bricks within structure
-const BRICK_W = 1;
-const BRICK_H = 5;
-const BRICK_D = 1;
+const BRICK_W = 1.25;
+const BRICK_H = 6;
+const BRICK_D = 1.25;
 
 /**
   * Definitions for the available structure layouts
@@ -72,7 +73,9 @@ const STRUCTURES = [
     [2, 0, 2, 0],
     [1, 1, 1, 1],
     [0, 2, 0, 0],
-    [0, 1, 1, 0]
+    [0, 1, 2, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0]
   ],
   // Structure #4
   [
@@ -89,5 +92,13 @@ const STRUCTURES = [
     [2, 0, 0],
     [0, 1, 1],
     [0, 2, 0]
+  ],
+  // Structure #6
+  [
+    [2, 0, 2, 0],
+    [1, 1, 1, 1],
+    [2, 0, 2, 0],
+    [1, 1, 1, 1],
+    [0, 2, 0 ,0]
   ]
 ];

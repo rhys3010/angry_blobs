@@ -32,7 +32,7 @@ var UserInput = (function(){
     * Handle mouse movement to control firing angle when in game screen
   */
   function mouseMove(event){
-    if(Game.getState() === STATE.PLAY){
+    if(Game.getState() === STATE.PLAY && Game.isPlayerTurn()){
       var mouseX = (event.clientX / window.innerWidth) * 2 - 1;
       var mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -54,7 +54,7 @@ var UserInput = (function(){
     // Prevent tooltip from showing when clicking buttons
     if(event.target.tagName != "A" || event.target.tagName != "BUTTON"){
       // Verify that the correct state is selected
-      if(Game.getState() === STATE.PLAY && Game.getCanTakeTurn()){
+      if(Game.getState() === STATE.PLAY && Game.isPlayerTurn()){
         mousePressed = new Date();
 
         // Show power indicator next to mouse
@@ -66,7 +66,6 @@ var UserInput = (function(){
         if(mouseDownInterval === -1){
           mouseDownInterval = setInterval(function(){
             power = Math.floor((new Date() - mousePressed) / SEC_TO_POWER_CONSTANT) % MAX_POWER;
-
             powerTooltip.innerHTML = "Power: " + Math.floor((power / MAX_POWER) * 100) + "%";
           }, 10);
         }
@@ -87,7 +86,7 @@ var UserInput = (function(){
 
     // Verify that the correct state is selected
     // and that it is valid for user to take turn
-    if(Game.getState() === STATE.PLAY && Game.getCanTakeTurn()){
+    if(Game.getState() === STATE.PLAY && Game.isPlayerTurn()){
       // Hide power indicator
       powerTooltip.style.display = 'none';
       // Pass power to game logic module
@@ -110,6 +109,7 @@ var UserInput = (function(){
 
     // Bind Restart button event
     restartButton.onclick = function(){
+      Game.endGame();
       Game.startGame();
     }
 
@@ -120,6 +120,7 @@ var UserInput = (function(){
 
     // TEMP Re-init button
     document.getElementById('reinit-button').onclick = function(){
+      Game.endGame();
       Game.startGame();
     }
 
