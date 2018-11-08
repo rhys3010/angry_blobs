@@ -123,8 +123,11 @@ var Game = (function(){
     changeState(STATE.END);
     // Cancel all timeouts/intervals
     clearInterval(shouldTurnEndInterval);
+    shouldTurnEndInterval = undefined;
     clearTimeout(botTurnDelay);
+    botTurnDelay = undefined;
     clearTimeout(turnEndDelay);
+    turnEndDelay = undefined;
   }
 
   /**
@@ -154,7 +157,7 @@ var Game = (function(){
   function endTurn(){
     // Clear End Turn Interval
     clearInterval(shouldTurnEndInterval);
-    // Ensure that all below code is only ran once
+    // Ensure that all below code is only ran if there are no active delays
     if(!turnEndDelay){
       // Wait X seconds before ending turn
       turnEndDelay = setTimeout(function(){
@@ -178,6 +181,9 @@ var Game = (function(){
             botTurnDelay = setTimeout(takeTurn, 2000, 40);
           }
         }
+        // Clear End Turn delay
+        clearTimeout(turnEndDelay);
+        turnEndDelay = undefined;
       }, TURN_END_DELAY);
     }
   }
