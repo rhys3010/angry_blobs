@@ -272,6 +272,15 @@ var ThreeComponents = (function(){
     arrow.visible = false;
   }
 
+  /**
+    * Returns whether or not the projectile is moving
+  */
+  function isProjectileStatic(){
+    // Approximation as velocity might never reach 0
+    var zero = 0.0001;
+    return (projectile.getLinearVelocity().lengthSq() < zero && projectile.getAngularVelocity().lengthSq() < zero);
+  }
+
 
   /* ===== EXPORT PUBLIC METHODS ===== */
   return{
@@ -280,5 +289,6 @@ var ThreeComponents = (function(){
     updateArrowDir: updateArrowDir,
     launchProjectile: launchProjectile,
     initScene: initScene,
+    isProjectileStatic: isProjectileStatic,
   };
 }());

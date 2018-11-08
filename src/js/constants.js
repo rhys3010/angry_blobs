@@ -26,6 +26,10 @@ const SEC_TO_POWER_CONSTANT = 40;
 const MIN_POWER = 0;
 const MAX_POWER = 50;
 const MAX_ROUNDS = 3;
+// The maximum amount of time a turn can last before it is automatically ended (ms)
+const MAX_TURN_LENGTH = 5000;
+// The time to delay before ending a turn
+const TURN_END_DELAY = 5000;
 
 // Object Constants
 const PROJECTILE_MASS = 1;

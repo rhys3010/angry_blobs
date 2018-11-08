@@ -19,10 +19,16 @@ var Game = (function(){
   var roundNo;
   // Boolean value to store wether it's the player's turn or not
   var playerTurn;
-  // Timeout to enforce the delay before the AI takes their turn
-  var botTurnDelay;
   // Store the currently used structure for both player and bot turn
   var currentStructure;
+
+  // Timeout to enforce the delay before the AI takes their turn
+  var botTurnDelay;
+  // Interval to continuously check if turn should end
+  var shouldTurnEndInterval;
+  // Timeout to enforce a delay before the turn ends
+  var turnEndDelay;
+
   // Keep track of scores
   var playerScore;
   var botScore;
@@ -34,7 +40,6 @@ var Game = (function(){
     * @param newRound - Whether or not the game has entered a new round
   */
   function initGameState(newRound){
-
     // If game has entered a new round, choose a new (random) structure
     if(newRound){
       currentStructure = STRUCTURES[Math.floor(Math.random() * STRUCTURES.length)];
@@ -50,13 +55,11 @@ var Game = (function(){
     * @returns true/false depending on if turn should end
   */
   function shouldTurnEnd(turnStartTime){
-
     // Turn should end if any of the following conditions are met
-    // > Projectile collides with boundary (wait 5 secs)
-    // > Projectile has been static for 5 seconds
-    // > Turn has lasted more than 20? Seconds
-
-    return (new Date() - turnStartTime) > 5000;
+    // > Projectile collides with boundary
+    // > Projectile is static
+    // > Turn has lasted more than X Seconds
+    return ThreeComponents.isProjectileStatic() || (new Date() - turnStartTime) > MAX_TURN_LENGTH;
   }
 
   /* ===== PUBLIC METHODS ===== */
@@ -100,7 +103,8 @@ var Game = (function(){
   }
 
   /**
-    * Start the game by initializing components and updating the state machine.
+    * Start the game by updating the state machine and
+    * Initializing all scene/game variables
   */
   function startGame(){
     changeState(STATE.PLAY);
@@ -117,11 +121,10 @@ var Game = (function(){
   function endGame(){
     // Change state
     changeState(STATE.END);
-    // Cancel all timeouts
-    if(botTurnDelay){
-      clearTimeout(botTurnDelay);
-      botTurnDelay = null;
-    }
+    // Cancel all timeouts/intervals
+    clearInterval(shouldTurnEndInterval);
+    clearTimeout(botTurnDelay);
+    clearTimeout(turnEndDelay);
   }
 
   /**
@@ -136,11 +139,12 @@ var Game = (function(){
     // Move to next turn
     playerTurn = !playerTurn;
 
-    // Continously check if the turn should end
-    var shouldTurnEndInterval = setInterval(function(){
+    // continuously check if the turn should end
+    shouldTurnEndInterval = setInterval(function(){
+      // If turn should end, wait X seconds and end turn
       if(shouldTurnEnd(turnStartTime)){
-        endTurn();
-        // Clear self
+        turnEndDelay = setTimeout(endTurn, TURN_END_DELAY);
+        // Clear Self
         clearInterval(shouldTurnEndInterval);
       }
     }, 100);

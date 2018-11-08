@@ -52,7 +52,7 @@ var UserInput = (function(){
   */
   function mouseDown(event){
     // Prevent tooltip from showing when clicking buttons
-    if(event.target.tagName != "A" || event.target.tagName != "BUTTON"){
+    if(event.target.tagName != "A" && event.target.tagName != "BUTTON"){
       // Verify that the correct state is selected
       if(Game.getState() === STATE.PLAY && Game.isPlayerTurn()){
         mousePressed = new Date();
@@ -83,16 +83,19 @@ var UserInput = (function(){
       clearInterval(mouseDownInterval);
       mouseDownInterval = -1;
     }
+    // Hide power indicator
+    powerTooltip.style.display = 'none';
 
-    // Verify that the correct state is selected
-    // and that it is valid for user to take turn
-    if(Game.getState() === STATE.PLAY && Game.isPlayerTurn()){
-      // Hide power indicator
-      powerTooltip.style.display = 'none';
-      // Pass power to game logic module
-      Game.takeTurn(power);
-      // Reset power
-      power = 0;
+    // Verify mouse was not hovering over a button
+    if(event.target.tagName != "A" && event.target.tagName != "BUTTON"){
+      // Verify that the correct state is selected
+      // and that it is valid for user to take turn
+      if(Game.getState() === STATE.PLAY && Game.isPlayerTurn()){
+        // Pass power to game logic module
+        Game.takeTurn(power);
+        // Reset power
+        power = 0;
+      }
     }
   }
 
