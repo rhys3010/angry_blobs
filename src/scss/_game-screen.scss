@@ -18,8 +18,14 @@
   -ms-user-select: none;
 }
 
-#reinit-button{
+#end-button{
   position: absolute;
-  top: 0;
+  top: 1%;
   right: 0;
+}
+
+#game-score-display{
+  position: absolute;
+  top: 1%;
+  left: 1%;
 }

@@ -45,6 +45,9 @@ var Game = (function(){
     * @param newRound - Whether or not the game has entered a new round
   */
   function initGameState(newRound){
+    // Update Game Info UI
+    Ui.updateGameInfo();
+
     // If game has entered a new round, choose a new (random) structure
     if(newRound){
       currentStructure = STRUCTURES[Math.floor(Math.random() * STRUCTURES.length)];
@@ -142,7 +145,6 @@ var Game = (function(){
   */
   function startGame(){
     changeState(STATE.PLAY);
-    initGameState(true);
     playerTurn = true;
     roundNo = 1;
     playerScore = 0;
@@ -150,6 +152,7 @@ var Game = (function(){
     turnInProgress = false;
     structureStaticCount = 0;
     hasBallHitStructure = false;
+    initGameState(true);
   }
 
   /**
@@ -164,6 +167,8 @@ var Game = (function(){
     shouldTurnEndInterval = undefined;
     clearTimeout(botTurnDelay);
     botTurnDelay = undefined;
+    // Update Scores
+    Ui.updateGameInfo();
   }
 
   /**
@@ -263,6 +268,27 @@ var Game = (function(){
     return turnInProgress;
   }
 
+  /**
+    * Gets the player's score
+  */
+  function getPlayerScore(){
+    return playerScore;
+  }
+
+  /**
+    * Gets the bot's score
+  */
+  function getBotScore(){
+    return botScore;
+  }
+
+  /**
+    * Returns the game's current round number
+  */
+  function getRoundNo(){
+    return roundNo;
+  }
+
   /* ===== EXPORT PUBLIC METHODS ===== */
 
   return{
@@ -275,5 +301,8 @@ var Game = (function(){
     getState: getState,
     isPlayerTurn: isPlayerTurn,
     isTurnInProgress: isTurnInProgress,
+    getRoundNo: getRoundNo,
+    getPlayerScore: getPlayerScore,
+    getBotScore: getBotScore,
   };
 }());

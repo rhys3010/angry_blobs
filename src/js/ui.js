@@ -80,6 +80,52 @@ var Ui = (function(){
     powerTooltip.style.display = 'none';
   }
 
+  /**
+    * Update on-screen displays (scores, round number, turn)
+  */
+  function updateGameInfo(){
+    var roundLabel = document.getElementById('round-label');
+    var outcomeLabel = document.getElementById('outcome-label');
+    var playerScoreLabel;
+    var botScoreLabel;
+
+    // Update label according to game's state
+    if(Game.getState() === STATE.PLAY){
+      playerScoreLabel = document.getElementById('game-player-score-label');
+      botScoreLabel = document.getElementById('game-bot-score-label');
+
+      // Update label content
+      roundLabel.innerHTML = "Round: " + Game.getRoundNo() + "/" + MAX_ROUNDS;
+      playerScoreLabel.innerHTML = "You: " + Game.getPlayerScore();
+      botScoreLabel.innerHTML = "BOT: " + Game.getBotScore();
+
+      // Update turn indication
+      if(Game.isPlayerTurn()){
+        playerScoreLabel.style.color = 'yellow';
+        botScoreLabel.style.color = 'white';
+      }else{
+        playerScoreLabel.style.color = 'white';
+        botScoreLabel.style.color = 'yellow';
+      }
+    }
+
+    if(Game.getState() === STATE.END){
+      playerScoreLabel = document.getElementById('end-player-score-label');
+      botScoreLabel = document.getElementById('end-bot-score-label');
+
+      if(Game.getPlayerScore() > Game.getBotScore()){
+        outcomeLabel.innerHTML = "You Won!";
+      }else if(Game.getPlayerScore() < Game.getBotScore()){
+        outcomeLabel.innerHTML = "You Lost!";
+      }else{
+        outcomeLabel.innerHTML = "Draw!";
+      }
+
+      playerScoreLabel.innerHTML = "You - - - " + Game.getPlayerScore();
+      botScoreLabel.innerHTML = "BOT - - - " + Game.getBotScore();
+    }
+  }
+
   /* ===== EXPORT PUBLIC METHODS ===== */
   return{
     changeScreen: changeScreen,
@@ -87,6 +133,7 @@ var Ui = (function(){
     updateToolTipValue: updateToolTipValue,
     showPowerToolTip: showPowerToolTip,
     hidePowerToolTip: hidePowerToolTip,
+    updateGameInfo: updateGameInfo,
   };
 
 }());

@@ -32,17 +32,23 @@
     </div>
     <!-- Game Container -->
     <div id="game-container" class="m-0 p-0" hidden>
-      <a id="reinit-button" class="btn btn-sm btn-primary text-white">init</a>
+      <div id="game-score-display" class="text-white">
+        <h2 id="round-label">Round: </h2>
+        <h2>Scores</h2>
+        <h3 id="game-player-score-label">You: </h3>
+        <h3 id="game-bot-score-label">BOT: </h3>
+      </div>
+      <a id="end-button" class="btn btn-sm btn-primary text-white">End Game</a>
       <span id="power-tooltip" class="text-white"></span>
     </div>
     <!-- End Screen Container -->
     <div id="end-container" class="m-0 p-0" hidden>
       <div class="container mx-auto text-secondary">
-        <h1 class="title text-center">You Won!</h1>
-        <div class="container scores text-center mt-5">
+        <h1 id="outcome-label" class="title text-center">You Won!</h1>
+        <div id="end-score-display" class="container text-center mt-5">
           <h1 class="my-4">Scores</h1>
-          <h2>You - - - 60</h2>
-          <h2>BOT - - - 30</h2>
+          <h2 id="end-player-score-label">You - - - </h2>
+          <h2 id="end-bot-score-label">BOT - - - </h2>
        </div>
        <div class="button-container text-center">
          <a id="menu-button" class="btn btn-lg btn-primary">Home</a>

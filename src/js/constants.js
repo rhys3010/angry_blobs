@@ -27,7 +27,7 @@ const MIN_POWER = 0;
 const MAX_POWER = 50;
 const MAX_ROUNDS = 3;
 // The maximum amount of time a turn can last before it is automatically ended (ms)
-const MAX_TURN_LENGTH = 70000;
+const MAX_TURN_LENGTH = 20000;
 // The amount of time the structure should be still for before ending
 const STRUCTURE_STATIC_LENGTH = 3000;
 const SHOULD_TURN_END_INTERVAL = 100;
