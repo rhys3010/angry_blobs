@@ -195,37 +195,40 @@ var Game = (function(){
    * End a turn by changing to bot/player and incrementing round if needed
   */
   function endTurn(){
-    // Clear shouldTurnEnd Interval
-    clearInterval(shouldTurnEndInterval);
-    shouldTurnEndInterval = undefined;
-    // Reset structure static count
-    structureStaticCount = 0;
-    hasBallHitStructure = false;
+    // Only end a turn if the game is in PLAY state
+    if(currentState === STATE.PLAY){
+      // Clear shouldTurnEnd Interval
+      clearInterval(shouldTurnEndInterval);
+      shouldTurnEndInterval = undefined;
+      // Reset structure static count
+      structureStaticCount = 0;
+      hasBallHitStructure = false;
 
-    // Calculate score and award to correct player
-    awardScore();
-    // Store whether or not the game has entered a new round
-    var newRound = false;
-    // If it was a bot's turn
-    if(!playerTurn){
-      // After bot takes turn round must increment
-      roundNo++;
-      newRound = true;
-    }
-    // If game is finished
-    if(roundNo > MAX_ROUNDS){
-      endGame();
-    }else{
-      // Move to next turn
-      playerTurn = !playerTurn;
-      turnInProgress = false;
-      // Get the game scene ready
-      initGameState(newRound);
-      // If next turn is bot's take the turn
+      // Calculate score and award to correct player
+      awardScore();
+      // Store whether or not the game has entered a new round
+      var newRound = false;
+      // If it was a bot's turn
       if(!playerTurn){
-        // TODO: Move to own function? Make more intelligent
-        // Wait 1 sec before bot launches
-        botTurnDelay = setTimeout(takeTurn, 2000, new THREE.Vector3(0.5, 0.1, 0), 40);
+        // After bot takes turn round must increment
+        roundNo++;
+        newRound = true;
+      }
+      // If game is finished
+      if(roundNo > MAX_ROUNDS){
+        endGame();
+      }else{
+        // Move to next turn
+        playerTurn = !playerTurn;
+        turnInProgress = false;
+        // Get the game scene ready
+        initGameState(newRound);
+        // If next turn is bot's take the turn
+        if(!playerTurn){
+          // TODO: Move to own function? Make more intelligent
+          // Wait 1 sec before bot launches
+          botTurnDelay = setTimeout(takeTurn, 2000, new THREE.Vector3(0.5, 0.1, 0), 40);
+        }
       }
     }
   }
