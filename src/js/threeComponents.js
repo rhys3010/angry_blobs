@@ -14,9 +14,9 @@ var ThreeComponents = (function(){
   // Three.js scene variables
   var camera, scene, renderer;
   // Scene/Game objects
-  var ground, projectile, arrow, boundary;
+  var ground, projectile, arrow;
   // The origin and direction  of the guiding arrow
-  var arrowOrigin, arrowDirection;
+  var arrowOrigin, arrowDirection, boundary;
   // Initialize empty bricks list to store threejs meshes
   var bricks = [];
 
@@ -103,7 +103,7 @@ var ThreeComponents = (function(){
     // Place boundary below the scene and make invisible
     boundary = new Physijs.BoxMesh(boundaryGeometry, boundaryMaterial, 0);
     boundary.name = "BOUNDARY";
-    boundary.position.set(0, -13, 0);
+    boundary.position.set(0, -15, 0);
     boundary.__dirtyPosition = true;
     boundary.visible = false;
 
@@ -127,7 +127,7 @@ var ThreeComponents = (function(){
     // Bind collision handling
     projectile.addEventListener('collision', Game.handleProjectileCollision);
 
-    // Add boundary and game objects to scene
+    // Add boundary game objects to scene
     scene.add(boundary);
     scene.add(ground);
     scene.add(projectile);
@@ -280,12 +280,19 @@ var ThreeComponents = (function(){
   }
 
   /**
-    * Returns whether or not the projectile is moving
+    * Returns whether or not the individual bricks that make up the structure are all static
   */
-  function isProjectileStatic(){
-    // Approximation as velocity might never reach 0
-    var zero = 0.0001;
-    return (projectile.getLinearVelocity().lengthSq() < zero && projectile.getAngularVelocity().lengthSq() < zero);
+  function isStructureStatic(){
+    // Approximation as velocity might never reach absolute 0
+    var errorMargin = 0.0001;
+
+    for(var i = 0; i < bricks.length; i++){
+      if(bricks[i].getLinearVelocity().lengthSq() < errorMargin && bricks[i].getAngularVelocity().lengthSq() < errorMargin){
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -310,7 +317,7 @@ var ThreeComponents = (function(){
     updateArrowDir: updateArrowDir,
     launchProjectile: launchProjectile,
     initScene: initScene,
-    isProjectileStatic: isProjectileStatic,
+    isStructureStatic: isStructureStatic,
     getBricksPosition: getBricksPosition,
   };
 }());

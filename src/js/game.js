@@ -26,8 +26,9 @@ var Game = (function(){
   var botTurnDelay;
   // Interval to continuously check if turn should end
   var shouldTurnEndInterval;
-  // Timeout to enforce a delay before the turn ends
-  var turnEndDelay;
+  // Count how long the structure has been static for
+  var structureStaticCount;
+  var hasBallHitStructure;
 
   // Store the currently used structure for both player and bot turn
   var currentStructure;
@@ -60,11 +61,19 @@ var Game = (function(){
   */
   function shouldTurnEnd(turnStartTime){
     // Turn should end if any of the following conditions are met
-    // > Projectile collides with boundary (handled by collision system)
-    // > Projectile is static
-    // > Turn has lasted more than X Seconds
+    // > All bricks within structure have been static for X seconds
+    //   AND ball has collided with structure
+    // > Ball is out of bounds and has not collided with structure (handled by collision system)
+    // > Turn has lasted more than maximum allowed time
 
-    return ThreeComponents.isProjectileStatic() || (new Date() - turnStartTime) > MAX_TURN_LENGTH;
+    if(ThreeComponents.isStructureStatic() && hasBallHitStructure){
+      structureStaticCount += SHOULD_TURN_END_INTERVAL;
+    }else{
+      structureStaticCount = 0;
+    }
+
+    // Check if structure has been static for correct time OR if max turn length is reached
+    return (structureStaticCount >= STRUCTURE_STATIC_LENGTH) || (new Date() - turnStartTime) >= MAX_TURN_LENGTH;
   }
 
   /**
@@ -139,6 +148,8 @@ var Game = (function(){
     playerScore = 0;
     botScore = 0;
     turnInProgress = false;
+    structureStaticCount = 0;
+    hasBallHitStructure = false;
   }
 
   /**
@@ -153,8 +164,6 @@ var Game = (function(){
     shouldTurnEndInterval = undefined;
     clearTimeout(botTurnDelay);
     botTurnDelay = undefined;
-    clearTimeout(turnEndDelay);
-    turnEndDelay = undefined;
   }
 
   /**
@@ -168,13 +177,13 @@ var Game = (function(){
     initialBricks = ThreeComponents.getBricksPosition();
     turnInProgress = true;
     ThreeComponents.launchProjectile(power);
-    // continuously check if the turn should end
+    // Check every second if the turn should end
     shouldTurnEndInterval = setInterval(function(){
-      // If turn should end, wait X seconds and end turn
+      // If turn should end, end it
       if(shouldTurnEnd(turnStartTime)){
         endTurn();
       }
-    }, 100);
+    }, SHOULD_TURN_END_INTERVAL);
   }
 
   /**
@@ -184,50 +193,50 @@ var Game = (function(){
     // Clear shouldTurnEnd Interval
     clearInterval(shouldTurnEndInterval);
     shouldTurnEndInterval = undefined;
-    // Ensure that all below code is only ran if there are no active delays
-    if(!turnEndDelay){
-      // Wait X seconds before ending turn
-      turnEndDelay = setTimeout(function(){
-        // Calculate score and award to correct player
-        awardScore();
-        // Store whether or not the game has entered a new round
-        var newRound = false;
-        // If it was a bot's turn
-        if(!playerTurn){
-          // After bot takes turn round must increment
-          roundNo++;
-          newRound = true;
-        }
-        // If game is finished
-        if(roundNo > MAX_ROUNDS){
-          endGame();
-        }else{
-          // Move to next turn
-          playerTurn = !playerTurn;
-          turnInProgress = false;
-          // Get the game scene ready
-          initGameState(newRound);
-          // If next turn is bot's take the turn
-          if(!playerTurn){
-            // TODO: Move to own function? Make more intelligent
-            // Wait 1 sec before bot launches
-            botTurnDelay = setTimeout(takeTurn, 2000, 40);
-          }
-        }
-        // Clear End Turn delay
-        clearTimeout(turnEndDelay);
-        turnEndDelay = undefined;
-      }, TURN_END_DELAY);
+    // Reset structure static count
+    structureStaticCount = 0;
+    hasBallHitStructure = false;
+
+    // Calculate score and award to correct player
+    awardScore();
+    // Store whether or not the game has entered a new round
+    var newRound = false;
+    // If it was a bot's turn
+    if(!playerTurn){
+      // After bot takes turn round must increment
+      roundNo++;
+      newRound = true;
+    }
+    // If game is finished
+    if(roundNo > MAX_ROUNDS){
+      endGame();
+    }else{
+      // Move to next turn
+      playerTurn = !playerTurn;
+      turnInProgress = false;
+      // Get the game scene ready
+      initGameState(newRound);
+      // If next turn is bot's take the turn
+      if(!playerTurn){
+        // TODO: Move to own function? Make more intelligent
+        // Wait 1 sec before bot launches
+        botTurnDelay = setTimeout(takeTurn, 2000, 40);
+      }
     }
   }
 
   /**
-    * Handle all projectile collisions
-    * @param other_object
+    * Handle all collisions that involve the projectile
+    * @param other_obect - The object that the projectile collided with
   */
   function handleProjectileCollision(other_object){
-    // If projectile has collided with outer boundary, end the turn
-    if(other_object.name === "BOUNDARY" && isTurnInProgress){
+    // If collided with brick, set correct flag
+    if(other_object.name === "BRICK"){
+      hasBallHitStructure = true;
+    }
+
+    // If collided with boundary and the ball hasn't hit the structure immediately end turn
+    if(other_object.name === "BOUNDARY" && !hasBallHitStructure){
       endTurn();
     }
   }
@@ -261,8 +270,8 @@ var Game = (function(){
     startGame: startGame,
     endGame: endGame,
     takeTurn: takeTurn,
-    endTurn: endTurn,
     handleProjectileCollision: handleProjectileCollision,
+    endTurn: endTurn,
     getState: getState,
     isPlayerTurn: isPlayerTurn,
     isTurnInProgress: isTurnInProgress,
