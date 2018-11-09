@@ -19,8 +19,8 @@ var Game = (function(){
   var roundNo;
   // Boolean value to store wether it's the player's turn or not
   var playerTurn;
-  // Store the currently used structure for both player and bot turn
-  var currentStructure;
+  // Store whether there is a turn in progress
+  var turnInProgress;
 
   // Timeout to enforce the delay before the AI takes their turn
   var botTurnDelay;
@@ -28,6 +28,9 @@ var Game = (function(){
   var shouldTurnEndInterval;
   // Timeout to enforce a delay before the turn ends
   var turnEndDelay;
+
+  // Store the currently used structure for both player and bot turn
+  var currentStructure;
 
   // Keep track of scores
   var playerScore;
@@ -59,6 +62,7 @@ var Game = (function(){
     // > Projectile collides with boundary (handled by collision system)
     // > Projectile is static
     // > Turn has lasted more than X Seconds
+
     return ThreeComponents.isProjectileStatic() || (new Date() - turnStartTime) > MAX_TURN_LENGTH;
   }
 
@@ -95,14 +99,6 @@ var Game = (function(){
   }
 
   /**
-    * Gets the current state of the game
-    * @returns currentState
-  */
-  function getState(){
-    return currentState;
-  }
-
-  /**
     * Start the game by updating the state machine and
     * Initializing all scene/game variables
   */
@@ -113,6 +109,7 @@ var Game = (function(){
     roundNo = 1;
     playerScore = 0;
     botScore = 0;
+    turnInProgress = false;
   }
 
   /**
@@ -121,6 +118,7 @@ var Game = (function(){
   function endGame(){
     // Change state
     changeState(STATE.END);
+    turnInProgress = false;
     // Cancel all timeouts/intervals
     clearInterval(shouldTurnEndInterval);
     shouldTurnEndInterval = undefined;
@@ -137,11 +135,8 @@ var Game = (function(){
   function takeTurn(power){
     // The time that the turn started
     var turnStartTime = new Date();
-    // Launch the projectile
+    turnInProgress = true;
     ThreeComponents.launchProjectile(power);
-    // Move to next turn
-    playerTurn = !playerTurn;
-
     // continuously check if the turn should end
     shouldTurnEndInterval = setInterval(function(){
       // If turn should end, wait X seconds and end turn
@@ -155,8 +150,9 @@ var Game = (function(){
    * End a turn by changing to bot/player and incrementing round if needed
   */
   function endTurn(){
-    // Clear End Turn Interval
+    // Clear shouldTurnEnd Interval
     clearInterval(shouldTurnEndInterval);
+    shouldTurnEndInterval = undefined;
     // Ensure that all below code is only ran if there are no active delays
     if(!turnEndDelay){
       // Wait X seconds before ending turn
@@ -164,7 +160,7 @@ var Game = (function(){
         // Store whether or not the game has entered a new round
         var newRound = false;
         // If it was a bot's turn
-        if(playerTurn){
+        if(!playerTurn){
           // After bot takes turn round must increment
           roundNo++;
           newRound = true;
@@ -173,10 +169,14 @@ var Game = (function(){
         if(roundNo > MAX_ROUNDS){
           endGame();
         }else{
+          // Move to next turn
+          playerTurn = !playerTurn;
+          turnInProgress = false;
           // Get the game scene ready
           initGameState(newRound);
           // If next turn is bot's take the turn
           if(!playerTurn){
+            // TODO: Move to own function? Make more intelligent 
             // Wait 1 sec before bot launches
             botTurnDelay = setTimeout(takeTurn, 2000, 40);
           }
@@ -194,10 +194,19 @@ var Game = (function(){
   */
   function handleProjectileCollision(other_object){
     // If projectile has collided with outer boundary, end the turn
-    if(other_object.name === "BOUNDARY"){
+    if(other_object.name === "BOUNDARY" && isTurnInProgress){
       endTurn();
     }
   }
+
+  /**
+    * Gets the current state of the game
+    * @returns currentState
+  */
+  function getState(){
+    return currentState;
+  }
+
 
   /**
     * Gets wether or not its the player's turn
@@ -206,16 +215,24 @@ var Game = (function(){
     return playerTurn;
   }
 
+  /**
+    * Gets wether or not there is a turn in progress
+  */
+  function isTurnInProgress(){
+    return turnInProgress;
+  }
+
   /* ===== EXPORT PUBLIC METHODS ===== */
 
   return{
     changeState: changeState,
-    getState: getState,
     startGame: startGame,
     endGame: endGame,
     takeTurn: takeTurn,
-    isPlayerTurn: isPlayerTurn,
     endTurn: endTurn,
     handleProjectileCollision: handleProjectileCollision,
+    getState: getState,
+    isPlayerTurn: isPlayerTurn,
+    isTurnInProgress: isTurnInProgress,
   };
 }());

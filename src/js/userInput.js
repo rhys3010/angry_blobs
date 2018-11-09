@@ -32,7 +32,7 @@ var UserInput = (function(){
     * Handle mouse movement to control firing angle when in game screen
   */
   function mouseMove(event){
-    if(Game.getState() === STATE.PLAY && Game.isPlayerTurn()){
+    if(Game.getState() === STATE.PLAY && Game.isPlayerTurn() && !Game.isTurnInProgress()){
       var mouseX = (event.clientX / window.innerWidth) * 2 - 1;
       var mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -54,7 +54,7 @@ var UserInput = (function(){
     // Prevent tooltip from showing when clicking buttons
     if(event.target.tagName != "A" && event.target.tagName != "BUTTON"){
       // Verify that the correct state is selected
-      if(Game.getState() === STATE.PLAY && Game.isPlayerTurn()){
+      if(Game.getState() === STATE.PLAY && Game.isPlayerTurn() && !Game.isTurnInProgress()){
         mousePressed = new Date();
 
         // Show power indicator next to mouse
@@ -90,7 +90,7 @@ var UserInput = (function(){
     if(event.target.tagName != "A" && event.target.tagName != "BUTTON"){
       // Verify that the correct state is selected
       // and that it is valid for user to take turn
-      if(Game.getState() === STATE.PLAY && Game.isPlayerTurn()){
+      if(Game.getState() === STATE.PLAY && Game.isPlayerTurn() && !Game.isTurnInProgress()){
         // Pass power to game logic module
         Game.takeTurn(power);
         // Reset power
