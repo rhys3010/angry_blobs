@@ -3,7 +3,7 @@
   * Main JS file to bootstrap all of the app's modules.
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
-  * @version 25/10/2018
+  * @version 0.1
 */
 
 $(document).ready(function(){

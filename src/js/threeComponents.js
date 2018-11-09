@@ -3,7 +3,7 @@
   * Manage all Three.js scene components
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
-  * @version 02/11/2018
+  * @version 0.1
 */
 
 /**
@@ -273,6 +273,7 @@ var ThreeComponents = (function(){
     * Update the direction of the arrow given the current mouse co-ordinates
     * @param mouseX
     * @param mouseY
+    * @returns arrowDirection
   */
   function updateArrowDir(mouseX, mouseY){
     // Plane to map mouse position onto using the raycaster
@@ -292,19 +293,22 @@ var ThreeComponents = (function(){
 
     // Face the arrow towards the intersect point
     arrow.setDirection(arrowDirection);
+
+    return arrowDirection;
   }
 
   /**
     * Launch the projectile:
     * Set the direction of the launch to that of the guide arrow
     * Multiply the directional vector by a scalar (5-50) depending on power chosen
+    * @param direction
     * @param power
   */
-  function launchProjectile(power){
-    // Multiply arrow direction vector by power
-    projectile.applyCentralImpulse(arrowDirection.multiplyScalar(power));
+  function launchProjectile(direction, power){
+    // Multiply directional vector by power
+    projectile.applyCentralImpulse(direction.multiplyScalar(power));
     // Reset Arrow Direction to default position
-    arrowDirection = new THREE.Vector3(0.5, 0.3, 0);
+    arrowDirection = new THREE.Vector3(0.5, 0.1, 0);
     // Hide arrow
     arrow.visible = false;
   }

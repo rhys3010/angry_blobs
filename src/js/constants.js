@@ -3,7 +3,7 @@
   * Declare all of the game's constants for global access
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
-  * @version 26/10/2018
+  * @version 0.1
 */
 
 // State Enum Type
@@ -34,8 +34,8 @@ const SHOULD_TURN_END_INTERVAL = 100;
 const SCORE_MULTIPLIER = 10;
 
 // Object Constants
-const PROJECTILE_MASS = 1;
-const PROJECTILE_RADIUS = 1;
+const PROJECTILE_MASS = 0.5;
+const PROJECTILE_RADIUS = 0.75;
 const PROJECTILE_FRICTION = 0;
 const PROJECTILE_RESTITUTION = 0;
 

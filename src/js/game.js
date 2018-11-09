@@ -3,7 +3,7 @@
   * Handle all the game logic, including screen changing etc.
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
-  * @version 26/10/2018
+  * @version 0.1
 */
 
 /**
@@ -175,13 +175,13 @@ var Game = (function(){
     * Take a turn by launching the projectile using the ThreeComponents module.
     * @param power (5-50) - The power to apply to the launch
   */
-  function takeTurn(power){
+  function takeTurn(direction, power){
     // The time that the turn started
     var turnStartTime = new Date();
     // Save all brick positions before turn is taken
     initialBricks = ThreeComponents.getBricksPosition();
     turnInProgress = true;
-    ThreeComponents.launchProjectile(power);
+    ThreeComponents.launchProjectile(direction, power);
     // Check every second if the turn should end
     shouldTurnEndInterval = setInterval(function(){
       // If turn should end, end it
@@ -225,7 +225,7 @@ var Game = (function(){
       if(!playerTurn){
         // TODO: Move to own function? Make more intelligent
         // Wait 1 sec before bot launches
-        botTurnDelay = setTimeout(takeTurn, 2000, 40);
+        botTurnDelay = setTimeout(takeTurn, 2000, new THREE.Vector3(0.5, 0.1, 0), 40);
       }
     }
   }

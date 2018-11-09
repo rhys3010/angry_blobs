@@ -3,7 +3,7 @@
   * Handle all user input, (button clicks, movmenet etc)
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
-  * @version 26/10/2018
+  * @version 0.1
 */
 
 /**
@@ -22,8 +22,9 @@ var UserInput = (function(){
   var mousePressed;
   // Mouse down interval counter to track power in real time
   var mouseDownInterval = -1;
-  // Store current power
+  // Store current power + direction
   var power = 0;
+  var direction;
 
   /* ===== PRIVATE METHODS ===== */
 
@@ -36,7 +37,7 @@ var UserInput = (function(){
       var mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
 
       // Update the arrow direction given the mouse's new position
-      ThreeComponents.updateArrowDir(mouseX, mouseY);
+      direction = ThreeComponents.updateArrowDir(mouseX, mouseY);
 
       // Update power indicator position if mouse is held down
       if(mouseDownInterval != -1){
@@ -88,8 +89,8 @@ var UserInput = (function(){
       // Verify that the correct state is selected
       // and that it is valid for user to take turn
       if(Game.getState() === STATE.PLAY && Game.isPlayerTurn() && !Game.isTurnInProgress()){
-        // Pass power to game logic module
-        Game.takeTurn(power);
+        // Pass power and direction to game logic module
+        Game.takeTurn(direction, power);
         // Reset power
         power = 0;
       }
