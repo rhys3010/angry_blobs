@@ -31,7 +31,8 @@ var Game = (function(){
 
   // Store the currently used structure for both player and bot turn
   var currentStructure;
-
+  // Store the bricks that make up the structure to calculate score
+  var initialBricks;
   // Keep track of scores
   var playerScore;
   var botScore;
@@ -64,6 +65,34 @@ var Game = (function(){
     // > Turn has lasted more than X Seconds
 
     return ThreeComponents.isProjectileStatic() || (new Date() - turnStartTime) > MAX_TURN_LENGTH;
+  }
+
+  /**
+    * Calculate score and award to correct player
+  */
+  function awardScore(){
+    var score = 0;
+    var finalBricks = ThreeComponents.getBricksPosition();
+
+    // Iterate through list of bricks within the structure
+    // and compare each brick's initial position with its current position
+    for(var i = 0; i < initialBricks.length; i++){
+      // Convert brick position to 2D Vectors (ignore Z axis)
+      var initialPos2d = new THREE.Vector2(initialBricks[i].x, initialBricks[i].y);
+      var finalPos2d = new THREE.Vector2(finalBricks[i].x, finalBricks[i].y);
+      // Increment score by distance between the two vectors
+      score += Math.floor(initialPos2d.distanceTo(finalPos2d));
+    }
+
+    // Divide score by amount of bricks to ensure consistent scoring for different sized structures
+    score = Math.floor((score / initialBricks.length) * SCORE_MULTIPLIER);
+
+    // Award score to either bot or player
+    if(playerTurn){
+      playerScore += score;
+    }else{
+      botScore += score;
+    }
   }
 
   /* ===== PUBLIC METHODS ===== */
@@ -135,6 +164,8 @@ var Game = (function(){
   function takeTurn(power){
     // The time that the turn started
     var turnStartTime = new Date();
+    // Save all brick positions before turn is taken
+    initialBricks = ThreeComponents.getBricksPosition();
     turnInProgress = true;
     ThreeComponents.launchProjectile(power);
     // continuously check if the turn should end
@@ -157,6 +188,8 @@ var Game = (function(){
     if(!turnEndDelay){
       // Wait X seconds before ending turn
       turnEndDelay = setTimeout(function(){
+        // Calculate score and award to correct player
+        awardScore();
         // Store whether or not the game has entered a new round
         var newRound = false;
         // If it was a bot's turn
@@ -176,7 +209,7 @@ var Game = (function(){
           initGameState(newRound);
           // If next turn is bot's take the turn
           if(!playerTurn){
-            // TODO: Move to own function? Make more intelligent 
+            // TODO: Move to own function? Make more intelligent
             // Wait 1 sec before bot launches
             botTurnDelay = setTimeout(takeTurn, 2000, 40);
           }
@@ -206,7 +239,6 @@ var Game = (function(){
   function getState(){
     return currentState;
   }
-
 
   /**
     * Gets wether or not its the player's turn

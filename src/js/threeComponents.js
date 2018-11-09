@@ -288,6 +288,20 @@ var ThreeComponents = (function(){
     return (projectile.getLinearVelocity().lengthSq() < zero && projectile.getAngularVelocity().lengthSq() < zero);
   }
 
+  /**
+    * Returns an ordered list of brick positions
+    * @returns bricksPos - A list of all brick positions
+  */
+  function getBricksPosition(){
+    var bricksPos = [];
+    for(var i = 0; i < bricks.length; i++){
+      var position = new THREE.Vector3().setFromMatrixPosition(bricks[i].matrixWorld);
+      bricksPos.push(position)
+    }
+
+    return bricksPos;
+  }
+
 
   /* ===== EXPORT PUBLIC METHODS ===== */
   return{
@@ -297,5 +311,6 @@ var ThreeComponents = (function(){
     launchProjectile: launchProjectile,
     initScene: initScene,
     isProjectileStatic: isProjectileStatic,
+    getBricksPosition: getBricksPosition,
   };
 }());

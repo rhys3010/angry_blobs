@@ -29,7 +29,8 @@ const MAX_ROUNDS = 3;
 // The maximum amount of time a turn can last before it is automatically ended (ms)
 const MAX_TURN_LENGTH = 7000;
 // The time to delay before ending a turn
-const TURN_END_DELAY = 5000;
+const TURN_END_DELAY = 3000;
+const SCORE_MULTIPLIER = 10;
 
 // Object Constants
 const PROJECTILE_MASS = 1;
