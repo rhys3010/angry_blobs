@@ -33,66 +33,6 @@ var ThreeComponents = (function(){
   }
 
   /**
-    * Create the structure of bricks that the player will aim for
-    * @param structure - a 2D Array representing the structure
-  */
-  function createStructure(structure){
-    // Create ThreeJS Geometry and material for the bricks
-    var brickGeometry = new THREE.BoxGeometry(BRICK_W, BRICK_H, BRICK_D);
-    var brickMaterial = new THREE.MeshBasicMaterial({color: 0xcccc00});
-
-    // Iterate through the structure array. Create and position the bricks accordingly
-    // Start right->left, bottom->top
-    // If brick is vertical, the gap between each brick should be 4 (width of brick - height)
-    // If brick is horizontal, the gap between each brick should be 2 (the height of the brick)
-    for(var i = 0; i < structure.length; i++){
-      var layer = structure[i];
-      for(var j = 0; j < layer.length; j++){
-        // Create brick mesh
-        var brick = new Physijs.BoxMesh(brickGeometry, brickMaterial, BRICK_MASS);
-        brick.name = "BRICK";
-        // The horizontal space between bricks so that there is room for horizontal bridge above
-        var BRICK_SPACING_X = BRICK_H - BRICK_W;
-
-        // If there is no brick in the layer's slot skip to next iteration
-        if(layer[j] != BRICK_EMPTY){
-          // Vertical
-          if(layer[j] === BRICK_VERTICAL){
-            // Set the X position of the brick so that it stands with the correct spacing (multiplied depending on number of bricks in row)
-            var posX = (30 + BRICK_SPACING_X) - (BRICK_SPACING_X * (j + 1));
-            // Set the Y position of the brick to stand on the ground (this will be relative to the brick's height)
-            // Then increment the y position depending on the blocks that lay below it (util function)
-            var posY = (ground.position.y + ground.geometry.parameters.height / 2) + (BRICK_H - BRICK_H / 2) + Util.calculateVerticalBrickSpacing(structure, j, i);
-            // Position brick accordingly
-            brick.position.set(posX, posY, 0);
-          }
-
-          // Horizontal
-          if(layer[j] === BRICK_HORIZONTAL){
-            // Rotate brick 90 degrees across z-axis to make flat
-            brick.rotation.z = Math.PI / 2;
-            brick.__dirtyRotation = true;
-            // Position the horizontal brick such that it's rightmost point is equal to a vertical brick's
-            var posX = (30 + BRICK_SPACING_X) - (BRICK_H / 2 - BRICK_W / 2) - (BRICK_SPACING_X * (j + 1));
-            // Set the Y position of the brick to stand on the ground (this will be relative to the brick's width)
-            // Then increment the y position depending on the blocks that lay below it (util function)
-            var posY = (ground.position.y + ground.geometry.parameters.height / 2) + (BRICK_W - BRICK_W / 2) + Util.calculateVerticalBrickSpacing(structure, j, i);
-
-            // Position brick accordingly
-            brick.position.set(posX, posY, 0);
-          }
-
-          // Mark brick pos as dirty and add to scene
-          brick.__dirtyPosition = true;
-          scene.add(brick);
-          // Add to bricks list
-          bricks.push(brick);
-        }
-      }
-    }
-  }
-
-  /**
     * Create the geometry, materials and meshes for each of the scene's objects
   */
   function createObjects(){
@@ -143,6 +83,66 @@ var ThreeComponents = (function(){
   }
 
   /**
+    * Create the structure of bricks that the player will aim for
+    * @param structure - a 2D Array representing the structure
+  */
+  function createStructure(structure){
+    // Create ThreeJS Geometry and material for the bricks
+    var brickGeometry = new THREE.BoxGeometry(BRICK_W, BRICK_H, BRICK_D);
+    var brickMaterial = new THREE.MeshBasicMaterial({color: 0xcccc00});
+
+    // Iterate through the structure array. Create and position the bricks accordingly
+    // Start right->left, bottom->top
+    // If brick is vertical, the gap between each brick should be 4 (width of brick - height)
+    // If brick is horizontal, the gap between each brick should be 2 (the height of the brick)
+    for(var i = 0; i < structure.length; i++){
+      var layer = structure[i];
+      for(var j = 0; j < layer.length; j++){
+        // Create brick mesh
+        var brick = new Physijs.BoxMesh(brickGeometry, brickMaterial, BRICK_MASS);
+        brick.name = "BRICK";
+        // The horizontal space between bricks so that there is room for horizontal bridge above
+        var BRICK_SPACING_X = BRICK_H - BRICK_W;
+
+        // If there is no brick in the layer's slot skip to next iteration
+        if(layer[j] != BRICK_EMPTY){
+          // Vertical
+          if(layer[j] === BRICK_VERTICAL){
+            // Set the X position of the brick so that it stands with the correct spacing (multiplied depending on number of bricks in row)
+            var posX = (30 + BRICK_SPACING_X) - (BRICK_SPACING_X * (j + 1));
+            // Set the Y position of the brick to stand on the ground (this will be relative to the brick's height)
+            // Then increment the y position depending on the blocks that lay below it (util function)
+            var posY = (ground.position.y + ground.geometry.parameters.height / 2) + (BRICK_H - BRICK_H / 2) + calculateVerticalBrickSpacing(structure, j, i);
+            // Position brick accordingly
+            brick.position.set(posX, posY, 0);
+          }
+
+          // Horizontal
+          if(layer[j] === BRICK_HORIZONTAL){
+            // Rotate brick 90 degrees across z-axis to make flat
+            brick.rotation.z = Math.PI / 2;
+            brick.__dirtyRotation = true;
+            // Position the horizontal brick such that it's rightmost point is equal to a vertical brick's
+            var posX = (30 + BRICK_SPACING_X) - (BRICK_H / 2 - BRICK_W / 2) - (BRICK_SPACING_X * (j + 1));
+            // Set the Y position of the brick to stand on the ground (this will be relative to the brick's width)
+            // Then increment the y position depending on the blocks that lay below it (util function)
+            var posY = (ground.position.y + ground.geometry.parameters.height / 2) + (BRICK_W - BRICK_W / 2) + calculateVerticalBrickSpacing(structure, j, i);
+
+            // Position brick accordingly
+            brick.position.set(posX, posY, 0);
+          }
+
+          // Mark brick pos as dirty and add to scene
+          brick.__dirtyPosition = true;
+          scene.add(brick);
+          // Add to bricks list
+          bricks.push(brick);
+        }
+      }
+    }
+  }
+
+  /**
     * Remove the current structure from the scene to allow the
     * generation of another.
   */
@@ -156,6 +156,36 @@ var ThreeComponents = (function(){
 
     // Empty the bricks list
     bricks = [];
+  }
+
+  /**
+    * Utility method to work out the vertical spacing required for a brick being placed
+  */
+  function calculateVerticalBrickSpacing(structure, indexX, indexY){
+    var spacing = 0;
+
+    // If indexY = 0, brick is on the bottom layer and therefore doesnt need spacing
+    if(indexY === BRICK_EMPTY){
+      return 0;
+    }
+
+    // Iterate through the structure until the brick's layer is reached and
+    // increment the required spacing based on the orientation of the bricks below the subject brick
+    for(var i = 0; i < indexY; i++){
+      // If slot contains vertical block
+      if(structure[i][indexX] === BRICK_VERTICAL){
+        // Increment spacing by HEIGHT of brick
+        spacing += BRICK_H;
+      }
+      // If slot contains horizontal block
+      // (or if slot immediately to the left contains horizontal block) ...
+      // blocks are always laid leftwards from position and occupy two slots
+      if(structure[i][indexX] === BRICK_HORIZONTAL || structure[i][indexX-1] === BRICK_HORIZONTAL){
+        // Increment spacing by WIDTH of brick
+        spacing += BRICK_W;
+      }
+    }
+    return spacing;
   }
 
 
