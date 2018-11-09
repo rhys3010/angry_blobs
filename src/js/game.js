@@ -122,13 +122,13 @@ var Game = (function(){
     // Update screen to represent new state
     switch(newState){
       case STATE.START:
-        Util.changeScreen(SCREEN.START_SCREEN);
+        Ui.changeScreen(SCREEN.START_SCREEN);
         break;
       case STATE.PLAY:
-        Util.changeScreen(SCREEN.GAME_SCREEN);
+        Ui.changeScreen(SCREEN.GAME_SCREEN);
         break;
       case STATE.END:
-        Util.changeScreen(SCREEN.END_SCREEN);
+        Ui.changeScreen(SCREEN.END_SCREEN);
         break;
       case STATE_INVALID:
         console.error("Invalid State: Please Restart.");

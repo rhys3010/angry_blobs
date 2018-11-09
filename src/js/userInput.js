@@ -13,11 +13,10 @@ var UserInput = (function(){
 
   'use strict';
 
-  // Declare all HTML elements
+  // Declare all HTML button elements
   var startButton = document.getElementById('start-button');
   var restartButton = document.getElementById('restart-button');
   var menuButton = document.getElementById('menu-button');
-  var powerTooltip = document.getElementById('power-tooltip');
 
   // Mouse press/release variable to measure power
   var mousePressed;
@@ -41,8 +40,7 @@ var UserInput = (function(){
 
       // Update power indicator position if mouse is held down
       if(mouseDownInterval != -1){
-        powerTooltip.style.top = (event.pageY + 20) + 'px';
-        powerTooltip.style.left = (event.pageX - 30) + 'px';
+        Ui.updateToolTipPosition(event.pageX, event.pageY);
       }
     }
   }
@@ -57,16 +55,15 @@ var UserInput = (function(){
       if(Game.getState() === STATE.PLAY && Game.isPlayerTurn() && !Game.isTurnInProgress()){
         mousePressed = new Date();
 
-        // Show power indicator next to mouse
-        powerTooltip.style.display = 'block';
-        powerTooltip.style.top = (event.pageY + 20) + 'px';
-        powerTooltip.style.left = (event.pageX - 30) + 'px';
+        // Show power indicator and update position
+        Ui.showPowerToolTip();
+        Ui.updateToolTipPosition(event.pageX, event.pageY);
 
         // Get current power and display on indicator
         if(mouseDownInterval === -1){
           mouseDownInterval = setInterval(function(){
             power = Math.floor((new Date() - mousePressed) / SEC_TO_POWER_CONSTANT) % MAX_POWER;
-            powerTooltip.innerHTML = "Power: " + Math.floor((power / MAX_POWER) * 100) + "%";
+            Ui.updateToolTipValue(power);
           }, 10);
         }
       }
@@ -84,7 +81,7 @@ var UserInput = (function(){
       mouseDownInterval = -1;
     }
     // Hide power indicator
-    powerTooltip.style.display = 'none';
+    Ui.hidePowerToolTip();
 
     // Verify mouse was not hovering over a button
     if(event.target.tagName != "A" && event.target.tagName != "BUTTON"){
