@@ -26,8 +26,9 @@ var Game = (function(){
   var botTurnDelay;
   // Interval to continuously check if turn should end
   var shouldTurnEndInterval;
-  // Count how long the structure has been static for
+  // Count how long the structure and projectile has been static for
   var structureStaticCount;
+  var projectileStaticCount;
   var hasBallHitStructure;
 
   // Store the currently used structure for both player and bot turn
@@ -60,6 +61,7 @@ var Game = (function(){
   /**
     * Perform the necessary checks to decide if a given turn should end:
     * Turn should end if any of the following conditions are met
+    * > Projectile has been static for X seconds and has not collided with structure
     * > All bricks within structure have been static for X seconds
     *   AND ball has collided with structure
     * > Ball is out of bounds and has not collided with structure (handled by collision system)
@@ -68,14 +70,21 @@ var Game = (function(){
     * @returns true/false depending on if turn should end
   */
   function shouldTurnEnd(turnStartTime){
+    // Count how long structure has been static for
     if(ThreeComponents.isStructureStatic() && hasBallHitStructure){
       structureStaticCount += SHOULD_TURN_END_INTERVAL;
     }else{
       structureStaticCount = 0;
     }
 
+    if(ThreeComponents.isProjectileStatic() && !hasBallHitStructure){
+      projectileStaticCount += SHOULD_TURN_END_INTERVAL;
+    }else{
+      projectileStaticCount = 0;
+    }
+
     // Check if structure has been static for correct time OR if max turn length is reached
-    return (structureStaticCount >= STRUCTURE_STATIC_LENGTH) || (new Date() - turnStartTime) >= MAX_TURN_LENGTH;
+    return projectileStaticCount >= PROJECTILE_STATIC_LENGTH || structureStaticCount >= STRUCTURE_STATIC_LENGTH || (new Date() - turnStartTime) >= MAX_TURN_LENGTH;
   }
 
   /**
@@ -153,6 +162,7 @@ var Game = (function(){
     botScore = 0;
     turnInProgress = false;
     structureStaticCount = 0;
+    projectileStaticCount = 0;
     hasBallHitStructure = false;
     initGameState(true);
   }
@@ -204,6 +214,7 @@ var Game = (function(){
       shouldTurnEndInterval = undefined;
       // Reset structure static count
       structureStaticCount = 0;
+      projectileStaticCount = 0;
       hasBallHitStructure = false;
 
       // Calculate score and award to correct player

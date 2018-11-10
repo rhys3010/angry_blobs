@@ -321,12 +321,19 @@ var ThreeComponents = (function(){
     var errorMargin = 0.0001;
 
     for(var i = 0; i < bricks.length; i++){
-      if(bricks[i].getLinearVelocity().lengthSq() < errorMargin && bricks[i].getAngularVelocity().lengthSq() < errorMargin){
-        return true;
+      // If any of the bricks are moving, return false
+      if(bricks[i].getLinearVelocity().lengthSq() > errorMargin && bricks[i].getAngularVelocity().lengthSq() > errorMargin){
+        return false;
       }
     }
+    return true;
+  }
 
-    return false;
+  function isProjectileStatic(){
+    // Approximation as velocity might never reach absolute 0
+    var errorMargin = 0.0001;
+
+    return projectile.getLinearVelocity().lengthSq() < errorMargin && projectile.getAngularVelocity().lengthSq() < errorMargin;
   }
 
   /**
@@ -358,6 +365,7 @@ var ThreeComponents = (function(){
     launchProjectile: launchProjectile,
     initScene: initScene,
     isStructureStatic: isStructureStatic,
+    isProjectileStatic: isProjectileStatic,
     getBricksPosition: getBricksPosition,
     getProjectilePosition: getProjectilePosition,
   };

@@ -29,7 +29,8 @@ const MAX_ROUNDS = 3;
 // The maximum amount of time a turn can last before it is automatically ended (ms)
 const MAX_TURN_LENGTH = 20000;
 // The amount of time the structure should be still for before ending
-const STRUCTURE_STATIC_LENGTH = 3000;
+const STRUCTURE_STATIC_LENGTH = 2000;
+const PROJECTILE_STATIC_LENGTH = 2000;
 const SHOULD_TURN_END_INTERVAL = 100;
 const SCORE_MULTIPLIER = 10;
 
@@ -75,8 +76,9 @@ const STRUCTURES = [
   ],
   // Structure #2
   [
-    [1, 1, 0],
-    [2, 0, 0]
+    [1, 1],
+    [2, 0],
+    [1, 1]
   ],
   // Structure #3
   [
@@ -110,5 +112,29 @@ const STRUCTURES = [
     [2, 0, 2, 0],
     [1, 1, 1, 1],
     [0, 2, 0 ,0]
+  ],
+  // Structure #7
+  [
+    [1, 1, 1, 1],
+    [2, 0, 2, 0],
+    [1, 1, 1, 1],
+    [2, 0, 2, 0]
+  ],
+  // Structure #8
+  [
+    [2, 0, 0],
+    [2, 0, 0],
+    [1, 1, 1],
+    [0, 2, 0],
+    [1, 0, 0],
+    [1, 0, 0]
+  ],
+  // Structure #9
+  [
+    [1, 1, 1, 1, 1, 1],
+    [1, 2, 0, 2, 0, 1],
+    [0, 1, 2, 0, 1, 0],
+    [0, 0, 1, 1, 0, 0],
+    [0, 0, 2, 0, 0, 0]
   ]
 ];
