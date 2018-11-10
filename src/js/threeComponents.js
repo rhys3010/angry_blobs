@@ -343,6 +343,12 @@ var ThreeComponents = (function(){
     return bricksPos;
   }
 
+  /**
+    * Returns the world position of the projectile
+  */
+  function getProjectilePosition(){
+    return new THREE.Vector3().setFromMatrixPosition(projectile.matrixWorld);
+  }
 
   /* ===== EXPORT PUBLIC METHODS ===== */
   return{
@@ -353,5 +359,6 @@ var ThreeComponents = (function(){
     initScene: initScene,
     isStructureStatic: isStructureStatic,
     getBricksPosition: getBricksPosition,
+    getProjectilePosition: getProjectilePosition,
   };
 }());

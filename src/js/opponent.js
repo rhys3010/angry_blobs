@@ -5,12 +5,12 @@
   * The AI will always attempt to apply full power but will have its power selected
   * randomly within a high range (always 100% is too good)
   * The AI will have 2 primary strategies:
-  *   1. Aim for the structure's center of gravity
+  *   1. Aim for the structure's center
   *   2. Aim for the structure's foundation
   * (Both of these strategies will have an error chance)
   * These strategies will be decided based on the height of the structure:
   *   > If the structure is tall - aim for foundation
-  *   > If the structure isnt tall - aim for COG
+  *   > If the structure isnt tall - aim for center
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
   * @version 0.1
@@ -24,13 +24,78 @@ var Opponent = (function(){
   /* ===== PRIVATE METHODS ===== */
 
   /**
-    * Evaluates the current structure to decide which strategy to choose:
-    * If the structure is "tall" - Use strategy 2.
-    * If the structure isnt "tall" - Use strategy 1.
+    * Evaluates the current structure to decide if tall or not:
     * "tall" is defined as a structure of atleast X layers,
-    * with X% of layers containing a vertical brick
+    * with atlest 50% of layers containing a vertical brick
   */
-  function chooseStrategy(structure){
+  function isStructureTall(structure){
+    // Decide if structure meets height requirements to be classified as 'tall'
+    if(structure.length >= STRUCTURE_TALL_LAYERS){
+      var verticalLayerCount = 0;
+
+      // Check each layer and count the number of layers with a vertical brick
+      for(var i = 0; i < structure.length; i++){
+        layer:
+        for(var j = 0; j < structure[i].length; j++){
+          if(structure[i][j] === BRICK_VERTICAL){
+            verticalLayerCount++;
+            // Jump to next layer as soon as a vertical brick is found
+            break layer;
+          }
+        }
+      }
+
+      // If atleast half of the layer contain a vertical brick
+      if(verticalLayerCount >= (structure.length / 2)){
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+    * Returns the direction of the structure's foundation
+    * The foundation of the structure will be the first brick of the structure
+  */
+  function getFoundationVector(structure){
+    var origin = ThreeComponents.getProjectilePosition();
+    // The first brick in the list
+    var brickPos = ThreeComponents.getBricksPosition()[0];
+
+    // Return the directional vector between the origin and the brick
+    return new THREE.Vector3().subVectors(brickPos, origin).normalize()
+  }
+
+  /**
+    * Returns the vector of the structure's center
+  */
+  function getCenterVector(structure){
+    // Find the structure's centermost layer
+    // (if even number of layers, round down)
+    var centerLayer = Math.floor((structure.length - 1) / 2);
+    // The index we use to search the internal list of bricks
+    var brickIndex = 0;
+    // The origin of the directional vector
+    var origin = ThreeComponents.getProjectilePosition();
+    // The center brick position (destination) of directional vector
+    var bricksPos;
+
+    // Convert the center brick's index to an index valid for
+    // our internal list of bricks by counting how many bricks have
+    // appeared before
+    for(var i = 0; i < centerLayer; i++){
+      for(var j = 0; j < structure[i].length; j++){
+        if(structure[i][j] != BRICK_EMPTY){
+          brickIndex++;
+        }
+      }
+    }
+
+    brickPos = ThreeComponents.getBricksPosition()[brickIndex];
+
+    // Return the directional vector between the origin and the brick
+    return new THREE.Vector3().subVectors(brickPos, origin).normalize()
   }
 
   /**
@@ -47,14 +112,20 @@ var Opponent = (function(){
 
   /* ===== PUBLIC METHODS ===== */
 
-    /**
-      * Take the turn
-    */
-    function takeTurn(structure){
-
-
-      Game.takeTurn(new THREE.Vector3(0.5, 0.1, 0), choosePower());
+  /**
+    * Take the turn
+  */
+  function takeTurn(structure){
+    // If structure is tall, launch projectile towards foundation of structure
+    if(isStructureTall(structure)){
+      direction = getFoundationVector(structure);
+      // If structure isn't tall, launch projectile towards center of structure
+    }else{
+      direction = getCenterVector(structure);
     }
+
+    Game.takeTurn(direction, choosePower());
+  }
 
   /* ===== EXPORT PUBLIC METHODS ===== */
   return{

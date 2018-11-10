@@ -53,6 +53,10 @@ const BRICK_W = 1.25;
 const BRICK_H = 6;
 const BRICK_D = 1.25;
 
+// Opponent Constants
+const OPPONENT_ERROR = 0;
+const STRUCTURE_TALL_LAYERS = 5;
+
 /**
   * Definitions for the available structure layouts
   * Structures are drawn right -> left, bottom->top.
