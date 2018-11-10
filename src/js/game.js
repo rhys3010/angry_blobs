@@ -58,17 +58,16 @@ var Game = (function(){
   }
 
   /**
-    * Perform the necessary checks to decide if a given turn should end
+    * Perform the necessary checks to decide if a given turn should end:
+    * Turn should end if any of the following conditions are met
+    * > All bricks within structure have been static for X seconds
+    *   AND ball has collided with structure
+    * > Ball is out of bounds and has not collided with structure (handled by collision system)
+    * > Turn has lasted more than maximum allowed time
     * @param turnStartTime - The time the turn started
     * @returns true/false depending on if turn should end
   */
   function shouldTurnEnd(turnStartTime){
-    // Turn should end if any of the following conditions are met
-    // > All bricks within structure have been static for X seconds
-    //   AND ball has collided with structure
-    // > Ball is out of bounds and has not collided with structure (handled by collision system)
-    // > Turn has lasted more than maximum allowed time
-
     if(ThreeComponents.isStructureStatic() && hasBallHitStructure){
       structureStaticCount += SHOULD_TURN_END_INTERVAL;
     }else{
@@ -81,6 +80,9 @@ var Game = (function(){
 
   /**
     * Calculate score and award to correct player
+    * The score awarded for a given turn is:
+    * The change in distance of EACH block, divided by the number of blocks in the structure
+    * and multiplied by a set multiplier.
   */
   function awardScore(){
     var score = 0;
@@ -223,11 +225,9 @@ var Game = (function(){
         turnInProgress = false;
         // Get the game scene ready
         initGameState(newRound);
-        // If next turn is bot's take the turn
+        // If next turn is bot's - have it take the turn
         if(!playerTurn){
-          // TODO: Move to own function? Make more intelligent
-          // Wait 1 sec before bot launches
-          botTurnDelay = setTimeout(takeTurn, 2000, new THREE.Vector3(0.5, 0.1, 0), 40);
+          botTurnDelay = setTimeout(Opponent.takeTurn, 2000, currentStructure);
         }
       }
     }

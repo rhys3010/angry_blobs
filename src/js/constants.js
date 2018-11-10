@@ -43,7 +43,7 @@ const GROUND_FRICTION = 0;
 const GROUND_RESTITUTION = 0;
 
 // Brick Constants
-const BRICK_MASS = 3;
+const BRICK_MASS = 3.5;
 // Orientation
 const BRICK_EMPTY = 0;
 const BRICK_VERTICAL = 1;
