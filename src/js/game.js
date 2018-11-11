@@ -77,6 +77,7 @@ var Game = (function(){
       structureStaticCount = 0;
     }
 
+    // Count how long projectile has been static for
     if(ThreeComponents.isProjectileStatic() && !hasBallHitStructure){
       projectileStaticCount += SHOULD_TURN_END_INTERVAL;
     }else{

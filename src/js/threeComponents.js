@@ -318,11 +318,11 @@ var ThreeComponents = (function(){
   */
   function isStructureStatic(){
     // Approximation as velocity might never reach absolute 0
-    var errorMargin = 0.0001;
+    var epsilon = 0.0001;
 
     for(var i = 0; i < bricks.length; i++){
       // If any of the bricks are moving, return false
-      if(bricks[i].getLinearVelocity().lengthSq() > errorMargin && bricks[i].getAngularVelocity().lengthSq() > errorMargin){
+      if(bricks[i].getLinearVelocity().lengthSq() > epsilon && bricks[i].getAngularVelocity().lengthSq() > epsilon){
         return false;
       }
     }
@@ -331,9 +331,9 @@ var ThreeComponents = (function(){
 
   function isProjectileStatic(){
     // Approximation as velocity might never reach absolute 0
-    var errorMargin = 0.0001;
+    var epsilon = 0.0001;
 
-    return projectile.getLinearVelocity().lengthSq() < errorMargin && projectile.getAngularVelocity().lengthSq() < errorMargin;
+    return projectile.getLinearVelocity().lengthSq() < epsilon && projectile.getAngularVelocity().lengthSq() < epsilon;
   }
 
   /**

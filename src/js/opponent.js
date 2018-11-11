@@ -92,6 +92,7 @@ var Opponent = (function(){
       }
     }
 
+    // Get the center brick's wordl co-ordinates
     brickPos = ThreeComponents.getBricksPosition()[brickIndex];
 
     // Return the directional vector between the origin and the brick
@@ -100,20 +101,21 @@ var Opponent = (function(){
 
   /**
     * Choose the power to apply to the turn based on a random selection within
-    * the top 20% of the range (40-50)
+    * the top X% of the range (depending on set error)
   */
   function choosePower(){
     // Set the minimum power to be the bottom of the random range
-    var minPower = MAX_POWER - (MAX_POWER * 0.20);
+    var minPower = MAX_POWER - (MAX_POWER * OPPONENT_ERROR);
 
-    // Choose a random power within the top 20% of the range
-    return Math.floor(Math.random() * (MAX_POWER - minPower + 1) + minPower);;
+    // Choose a random power within the top X% of the range
+    return Math.floor(Math.random() * (MAX_POWER - minPower + 1)) + minPower;
   }
 
   /* ===== PUBLIC METHODS ===== */
 
   /**
-    * Take the turn
+    * Take the turn by deciding which strategy to take and applying error to
+    * the direction of the shot
   */
   function takeTurn(structure){
     // If structure is tall, launch projectile towards foundation of structure
@@ -123,6 +125,13 @@ var Opponent = (function(){
     }else{
       direction = getCenterVector(structure);
     }
+
+    // Apply error to y-direction of the shot
+    // e.g. if y value is 0.6 and error value is 20%
+    // y value can be any random value between 0.54 and 0.66
+    var maxDirection = direction.y + (direction.y * OPPONENT_ERROR);
+    var minDirection = direction.y - (direction.y * OPPONENT_ERROR);
+    direction.setY(Math.random() * (maxDirection - minDirection) + minDirection);
 
     Game.takeTurn(direction, choosePower());
   }
