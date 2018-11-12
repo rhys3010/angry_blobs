@@ -50,7 +50,7 @@ var ThreeComponents = (function(){
     // Create and position the ground mesh
     var groundGeometry = new THREE.BoxGeometry(70, 5, 60);
     var groundMaterial = new THREE.MeshBasicMaterial({color: 0x228B22});
-    ground = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+    ground = new Physijs.BoxMesh(groundGeometry, Physijs.createMaterial(groundMaterial, GROUND_FRICTION, GROUND_RESTITUTION), 0);
     ground.name = "GROUND";
     // Set the ground to occupy 1/8th of the screen at the bottom
     ground.position.set(0, -15, 0)
@@ -59,7 +59,7 @@ var ThreeComponents = (function(){
     // Create and position projectile mesh
     var projectileGeometry = new THREE.SphereGeometry(PROJECTILE_RADIUS, 20, 20);
     var projectileMaterial = new THREE.MeshBasicMaterial({color: 0x3342FF});
-    projectile = new Physijs.SphereMesh(projectileGeometry, projectileMaterial, PROJECTILE_MASS);
+    projectile = new Physijs.SphereMesh(projectileGeometry, Physijs.createMaterial(projectileMaterial, PROJECTILE_FRICTION, PROJECTILE_RESTITUTION), PROJECTILE_MASS);
     projectile.name = "PROJECTILE";
     // Set the initial position of the projectile
     projectile.position.set(-30, (ground.position.y + ground.geometry.parameters.height / 2) + PROJECTILE_RADIUS, 0);
@@ -99,7 +99,7 @@ var ThreeComponents = (function(){
       var layer = structure[i];
       for(var j = 0; j < layer.length; j++){
         // Create brick mesh
-        var brick = new Physijs.BoxMesh(brickGeometry, brickMaterial, BRICK_MASS);
+        var brick = new Physijs.BoxMesh(brickGeometry, Physijs.createMaterial(brickMaterial, BRICK_FRICTION, BRICK_RESTITUTION), BRICK_MASS);
         brick.name = "BRICK";
         // The horizontal space between bricks so that there is room for horizontal bridge above
         var BRICK_SPACING_X = BRICK_H - BRICK_W;

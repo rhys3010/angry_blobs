@@ -2,8 +2,7 @@
   * opponent.js
   * Perform the necessary evaluation of the current structure and have the AI opponent
   * take its turn.
-  * The AI will always attempt to apply full power but will have its power selected
-  * randomly within a high range (always 100% is too good)
+  * The AI will always attempt to apply full power but will have its power 'error-fied'
   * The AI will have 2 primary strategies:
   *   1. Aim for the structure's center
   *   2. Aim for the structure's foundation
