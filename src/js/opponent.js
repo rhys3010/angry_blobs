@@ -55,22 +55,19 @@ var Opponent = (function(){
   }
 
   /**
-    * Returns the direction of the structure's foundation
+    * Returns the position of the structure's foundation
     * The foundation of the structure will be the first brick of the structure
   */
-  function getFoundationVector(structure){
+  function getFoundationPos(structure){
     var origin = ThreeComponents.getProjectilePosition();
     // The first brick in the list
-    var brickPos = ThreeComponents.getBricksPosition()[0];
-
-    // Return the directional vector between the origin and the brick
-    return new THREE.Vector3().subVectors(brickPos, origin).normalize()
+    return ThreeComponents.getBricksPosition()[0];
   }
 
   /**
-    * Returns the vector of the structure's center
+    * Returns the position of the structure's center
   */
-  function getCenterVector(structure){
+  function getCenterPos(structure){
     // Find the structure's centermost layer
     // (if even number of layers, round down)
     var centerLayer = Math.floor((structure.length - 1) / 2);
@@ -92,11 +89,8 @@ var Opponent = (function(){
       }
     }
 
-    // Get the center brick's wordl co-ordinates
-    brickPos = ThreeComponents.getBricksPosition()[brickIndex];
-
-    // Return the directional vector between the origin and the brick
-    return new THREE.Vector3().subVectors(brickPos, origin).normalize()
+    // Get the center brick's world co-ordinates
+    return ThreeComponents.getBricksPosition()[brickIndex];
   }
 
   /**
@@ -114,17 +108,45 @@ var Opponent = (function(){
   /* ===== PUBLIC METHODS ===== */
 
   /**
-    * Take the turn by deciding which strategy to take and applying error to
-    * the direction of the shot
+    * Take the turn by deciding which strategy to take, decided on optimum launch angle to hit target
+    * and applying error to the direction of the shot
   */
   function takeTurn(structure){
+    // The target position
+    var targetPos;
+    // The original vector between the projectile origin and the target
+    var directionToTarget;
+    var power = choosePower();
+
     // If structure is tall, launch projectile towards foundation of structure
     if(isStructureTall(structure)){
-      direction = getFoundationVector(structure);
+      targetPos = getFoundationPos(structure);
       // If structure isn't tall, launch projectile towards center of structure
     }else{
-      direction = getCenterVector(structure);
+      targetPos = getCenterPos(structure);
     }
+
+    // The vector from the projectile's origin to the target position (needed to 'work out' velocity)
+    directionToTarget = new THREE.Vector3().subVectors(targetPos, ThreeComponents.getProjectilePosition()).normalize();
+
+    // Work out the optimum launch angle needed to hit the target position
+    // https://wikimedia.org/api/rest_v1/media/math/render/svg/4db61cb4c3140b763d9480e51f90050967288397
+    // The above equation only works if the projectile's origin is 0,0,
+    // Therefore we have to alter the target's x and y position to account for the offset
+    // Once we have the optimum angle in radians we can convert it to a direcitonal vector
+    var x = targetPos.x - ThreeComponents.getProjectilePosition().x;
+    var y = targetPos.y - ThreeComponents.getProjectilePosition().y;
+    // Change in Velocity = Impulse / Mass
+    // Velocity needed some bodging so is not 100% mathematically correct :(
+    var v = ((directionToTarget.multiplyScalar(power).lengthSq()) / PROJECTILE_MASS) * 2;
+    var g = 9.81;
+    var sqrt = Math.pow(v, 4) - (g * (g * (x * x) + 2 * y * (v * v)));
+
+    // The optimum launch angle (in radians)
+    var angle = Math.atan2(((v * v) - Math.sqrt(sqrt)), g * x);
+
+    // Convert the optimum angle to a directional vector towards the target
+    direction = new THREE.Vector3(Math.cos(angle), Math.sin(angle));
 
     // Apply error to y-direction of the shot
     // e.g. if y value is 0.6 and error value is 20%
@@ -133,7 +155,7 @@ var Opponent = (function(){
     var minDirection = direction.y - (direction.y * OPPONENT_ERROR);
     direction.setY(Math.random() * (maxDirection - minDirection) + minDirection);
 
-    Game.takeTurn(direction, choosePower());
+    Game.takeTurn(direction, power);
   }
 
   /* ===== EXPORT PUBLIC METHODS ===== */

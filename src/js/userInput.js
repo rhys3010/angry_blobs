@@ -122,7 +122,6 @@ var UserInput = (function(){
     // Bind End Button event
     document.getElementById('end-button').onclick = function(){
       Game.endGame();
-      Game.startGame();
     }
 
     // Bind mousemove event

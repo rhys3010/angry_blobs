@@ -305,8 +305,10 @@ var ThreeComponents = (function(){
     * @param power
   */
   function launchProjectile(direction, power){
+
     // Multiply directional vector by power
     projectile.applyCentralImpulse(direction.multiplyScalar(power));
+
     // Reset Arrow Direction to default position
     arrowDirection = new THREE.Vector3(0.5, 0.1, 0);
     // Hide arrow
