@@ -185,8 +185,8 @@ var ThreeComponents = (function(){
   */
   function create(){
     // Initialize PhysiJs
-    Physijs.scripts.worker = "../../vendor/physijs/physijs_worker.js";
-    Physijs.scripts.ammo = "../../vendor/physijs/ammo.js";
+    Physijs.scripts.worker = "/angryblobs/vendor/physijs/physijs_worker.js";
+    Physijs.scripts.ammo = "/angryblobs/../vendor/physijs/ammo.js";
 
     scene = new Physijs.Scene();
     // Bind scene.simulate() to run independently of scene rendering
