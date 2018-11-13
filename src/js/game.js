@@ -31,6 +31,8 @@ var Game = (function(){
   var projectileStaticCount;
   var hasBallHitStructure;
 
+  // A list of available structures to use
+  var structurePool;
   // Store the currently used structure for both player and bot turn
   var currentStructure;
   // Store the bricks that make up the structure to calculate score
@@ -51,7 +53,13 @@ var Game = (function(){
 
     // If game has entered a new round, choose a new (random) structure
     if(newRound){
-      currentStructure = STRUCTURES[Math.floor(Math.random() * STRUCTURES.length)];
+      var randomIndex = Math.floor(Math.random() * STRUCTURES.length);
+      currentStructure = STRUCTURES[randomIndex];
+
+      // Remove current structure from the structure pool to prevent repeating
+      structurePool = structurePool.filter(function(structure){
+        return structure !== structurePool[randomIndex];
+      });
     }
 
     // Initialize Scene ready for next turn
@@ -132,7 +140,7 @@ var Game = (function(){
 
   /**
     * Changes the current state of the game
-    * @param newState
+    * @param newState    console.log(structurePool);
   */
   function changeState(newState){
 
@@ -166,6 +174,8 @@ var Game = (function(){
   */
   function startGame(){
     changeState(STATE.PLAY);
+    // Initialize Structure Pool
+    structurePool = STRUCTURES;
     playerTurn = true;
     roundNo = 1;
     playerScore = 0;
