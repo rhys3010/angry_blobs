@@ -20,21 +20,21 @@ gulp.task('vendor', function() {
   gulp.src([
       './node_modules/three/build/three.min.js',
     ])
-    .pipe(gulp.dest('./vendor/three'))
+    .pipe(gulp.dest('./vendor/three'));
 
   // Bootstrap
   gulp.src([
     './node_modules/bootstrap/dist/css/bootstrap.min.css',
     './node_modules/bootstrap/dist/css/bootstrap.min.css.map'
   ])
-  .pipe(gulp.dest('./vendor/bootstrap'))
+  .pipe(gulp.dest('./vendor/bootstrap'));
 
   // Jquery
   gulp.src([
     './node_modules/jquery/dist/*',
     '!./node_modules/jquery/dist/core.js'
   ])
-  .pipe(gulp.dest('./vendor/jquery'))
+  .pipe(gulp.dest('./vendor/jquery'));
 });
 
 // Compile SCSS
@@ -80,5 +80,46 @@ gulp.task('js', ['js:minify']);
 
 // Dist Task
 gulp.task('dist', function() {
-  // TODO: implement
+  // Index file
+  gulp.src([
+      './index.html',
+    ])
+    .pipe(gulp.dest('./dist/'));
+
+  // Javascript files
+  gulp.src([
+    './src/js/*',
+  ])
+  .pipe(gulp.dest('./dist/src/js/'));
+
+  // CSS
+  gulp.src([
+    './src/css/*.css',
+  ])
+  .pipe(gulp.dest('./dist/src/css/'));
+
+  // Assets - Fonts
+  gulp.src([
+    './src/assets/fonts/*',
+  ])
+  .pipe(gulp.dest('./dist/src/assets/fonts/'));
+
+  // Assets - Images
+  gulp.src([
+    './src/assets/img/*',
+  ])
+  .pipe(gulp.dest('./dist/src/assets/img/'));
+
+  // Assets - Textures
+  gulp.src([
+    './src/assets/textures/*',
+  ])
+  .pipe(gulp.dest('./dist/src/assets/textures/'));
+
+  // Vendor
+  gulp.src([
+    './vendor/**/*.*',
+  ])
+  .pipe(gulp.dest('./dist/vendor/'));
+
 });
