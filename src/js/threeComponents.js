@@ -39,21 +39,23 @@ var ThreeComponents = (function(){
 
     // Create and position the ground mesh
     var groundGeometry = new THREE.BoxGeometry(70, 1, 20);
-    var groundMaterial = new THREE.MeshBasicMaterial({color: 0x228B22});
+    var groundMaterial = new THREE.MeshPhongMaterial({color: 0x228B22});
     ground = new Physijs.BoxMesh(groundGeometry, Physijs.createMaterial(groundMaterial, GROUND_FRICTION, GROUND_RESTITUTION), 0);
     ground.name = "GROUND";
     // Set the ground to occupy 1/8th of the screen at the bottom
     ground.position.set(0, -15, 0)
     ground.__dirtyPosition = true;
+    ground.receiveShadow = true;
 
     // Create and position projectile mesh
     var projectileGeometry = new THREE.SphereGeometry(PROJECTILE_RADIUS, 20, 20);
-    var projectileMaterial = new THREE.MeshBasicMaterial({color: 0x3342FF});
+    var projectileMaterial = new THREE.MeshPhongMaterial({color: 0x3342FF});
     projectile = new Physijs.SphereMesh(projectileGeometry, Physijs.createMaterial(projectileMaterial, PROJECTILE_FRICTION, PROJECTILE_RESTITUTION), PROJECTILE_MASS);
     projectile.name = "PROJECTILE";
     // Set the initial position of the projectile
     projectile.position.set(-30, (ground.position.y + ground.geometry.parameters.height / 2) + PROJECTILE_RADIUS, 0);
     projectile.__dirtyPosition = true;
+    projectile.castShadow = true;
     // Bind collision handling
     projectile.addEventListener('collision', Game.handleProjectileCollision);
 
@@ -78,7 +80,7 @@ var ThreeComponents = (function(){
   function createStructure(structure){
     // Create ThreeJS Geometry and material for the bricks
     var brickGeometry = new THREE.BoxGeometry(BRICK_W, BRICK_H, BRICK_D);
-    var brickMaterial = new THREE.MeshBasicMaterial({color: 0xcccc00});
+    var brickMaterial = new THREE.MeshPhongMaterial({color: 0xcccc00});
 
     // Iterate through the structure array. Create and position the bricks accordingly
     // Start right->left, bottom->top
@@ -90,6 +92,8 @@ var ThreeComponents = (function(){
         // Create brick mesh
         var brick = new Physijs.BoxMesh(brickGeometry, Physijs.createMaterial(brickMaterial, BRICK_FRICTION, BRICK_RESTITUTION), BRICK_MASS);
         brick.name = "BRICK";
+        brick.receiveShadow = true;
+        brick.castShadow = true;
         // The horizontal space between bricks so that there is room for horizontal bridge above
         var BRICK_SPACING_X = BRICK_H - BRICK_W;
 
@@ -185,8 +189,8 @@ var ThreeComponents = (function(){
   */
   function create(){
     // Initialize PhysiJs
-    Physijs.scripts.worker = "/angryblobs/vendor/physijs/physijs_worker.js";
-    Physijs.scripts.ammo = "/angryblobs/../vendor/physijs/ammo.js";
+    Physijs.scripts.worker = "/../../vendor/physijs/physijs_worker.js";
+    Physijs.scripts.ammo = "/../../vendor/physijs/ammo.js";
 
     scene = new Physijs.Scene();
     // Bind scene.simulate() to run independently of scene rendering
@@ -209,8 +213,30 @@ var ThreeComponents = (function(){
     // Add objects
     createObjects();
 
+    // Add Lighting
+    var hemiLight = new THREE.HemisphereLight(0xddeeff, 0x0f0e0d, 0.2);
+    scene.add(hemiLight);
+
+    var pointLight = new THREE.PointLight(0xffffff, 1, 200, 1);
+    pointLight.castShadow = true;
+    pointLight.position.set(30, 30, 30);
+    scene.add(pointLight);
+
     // Initialize renderer and add to DOM
     renderer = new THREE.WebGLRenderer({antialias: true});
+    // Shadow stuff
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.soft = true;
+
+    renderer.shadowCameraNear = 3;
+    renderer.shadowCameraFar = camera.far;
+    renderer.shadowCameraFov = 50;
+
+    renderer.shadowMapBias = 0.0039;
+    renderer.shadoMapDarkness = 0.5;
+    renderer.shadowMapWidth = 1024;
+    renderer.shadowMapHeight = 1024;
+
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     SCREEN.GAME_SCREEN.appendChild(renderer.domElement);
