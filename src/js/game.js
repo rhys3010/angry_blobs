@@ -62,8 +62,8 @@ var Game = (function(){
     * Perform the necessary checks to decide if a given turn should end:
     * Turn should end if any of the following conditions are met
     * > Projectile has been static for X seconds and has not collided with structure
-    * > All bricks within structure have been static for X seconds
-    *   AND ball has collided with structure
+    * > All bricks within structure have been 'static' for X seconds
+    *   (a brick is counted as static if it has fallen out of bounds) AND ball has collided with structure
     * > Ball is out of bounds and has not collided with structure (handled by collision system)
     * > Turn has lasted more than maximum allowed time
     * @param turnStartTime - The time the turn started
@@ -84,8 +84,11 @@ var Game = (function(){
       projectileStaticCount = 0;
     }
 
-    // Check if structure has been static for correct time OR if max turn length is reached
-    return projectileStaticCount >= PROJECTILE_STATIC_LENGTH || structureStaticCount >= STRUCTURE_STATIC_LENGTH || (new Date() - turnStartTime) >= MAX_TURN_LENGTH;
+    // Check if structure has been static for correct time OR if max turn length is reached OR if projectile is out of bounds
+    return (ThreeComponents.getProjectilePosition().y < OUT_OF_BOUNDS_Y) && !hasBallHitStructure ||
+           projectileStaticCount >= PROJECTILE_STATIC_LENGTH ||
+           structureStaticCount >= STRUCTURE_STATIC_LENGTH ||
+           (new Date() - turnStartTime) >= MAX_TURN_LENGTH;
   }
 
   /**
@@ -104,6 +107,12 @@ var Game = (function(){
       // Convert brick position to 2D Vectors (ignore Z axis)
       var initialPos2d = new THREE.Vector2(initialBricks[i].x, initialBricks[i].y);
       var finalPos2d = new THREE.Vector2(finalBricks[i].x, finalBricks[i].y);
+
+      // If the final y-position of a brick is 'out of bounds'. Cap it at that level.
+      if(finalPos2d.y < OUT_OF_BOUNDS_Y){
+        finalPos2d.y = OUT_OF_BOUNDS_Y;
+      }
+
       // Increment score by distance between the two vectors
       score += Math.floor(initialPos2d.distanceTo(finalPos2d));
     }
@@ -253,11 +262,6 @@ var Game = (function(){
     // If collided with brick, set correct flag
     if(other_object.name === "BRICK"){
       hasBallHitStructure = true;
-    }
-
-    // If collided with boundary and the ball hasn't hit the structure immediately end turn
-    if(other_object.name === "BOUNDARY" && !hasBallHitStructure){
-      endTurn();
     }
   }
 

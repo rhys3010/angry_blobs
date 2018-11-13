@@ -41,8 +41,13 @@ const PROJECTILE_FRICTION = 0;
 const PROJECTILE_RESTITUTION = 1.5;
 const GROUND_FRICTION = 0.5;
 const GROUND_RESTITUTION = 1.0;
-const BRICK_FRICTION = 0;
+const BRICK_FRICTION = 2.0;
 const BRICK_RESTITUTION = 0;
+// Extremely high boundary friction to stop bricks from sliding far
+const BOUNDARY_FRICTION = 5.0;
+const BOUNDARY_RESTITUTION = 0;
+// The y coordinate to consider when an object is out of bounds
+const OUT_OF_BOUNDS_Y = -15;
 
 // Brick Constants
 const BRICK_MASS = 3.5;

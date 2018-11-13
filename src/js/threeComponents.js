@@ -16,7 +16,7 @@ var ThreeComponents = (function(){
   // Scene/Game objects
   var ground, projectile, arrow;
   // The origin and direction  of the guiding arrow
-  var arrowOrigin, arrowDirection, boundary;
+  var arrowOrigin, arrowDirection;
   // Initialize empty bricks list to store threejs meshes
   var bricks = [];
 
@@ -27,28 +27,18 @@ var ThreeComponents = (function(){
     * Handle Window Resizing
   */
   function onWindowResize(){
+    renderer.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
   /**
     * Create the geometry, materials and meshes for each of the scene's objects
   */
   function createObjects(){
-    // Create invisible scene boundary to detect projectile collisions
-    var boundaryGeometry = new THREE.BoxGeometry(1000, 0.5, 100);
-    var boundaryMaterial = new THREE.MeshBasicMaterial({color: 0xff0000});
-
-    // Place boundary below the scene and make invisible
-    boundary = new Physijs.BoxMesh(boundaryGeometry, boundaryMaterial, 0);
-    boundary.name = "BOUNDARY";
-    boundary.position.set(0, -15, 0);
-    boundary.__dirtyPosition = true;
-    boundary.visible = false;
 
     // Create and position the ground mesh
-    var groundGeometry = new THREE.BoxGeometry(70, 5, 60);
+    var groundGeometry = new THREE.BoxGeometry(70, 1, 20);
     var groundMaterial = new THREE.MeshBasicMaterial({color: 0x228B22});
     ground = new Physijs.BoxMesh(groundGeometry, Physijs.createMaterial(groundMaterial, GROUND_FRICTION, GROUND_RESTITUTION), 0);
     ground.name = "GROUND";
@@ -67,8 +57,7 @@ var ThreeComponents = (function(){
     // Bind collision handling
     projectile.addEventListener('collision', Game.handleProjectileCollision);
 
-    // Add boundary game objects to scene
-    scene.add(boundary);
+    // Add game objects to scene
     scene.add(ground);
     scene.add(projectile);
     scene.updateMatrixWorld(true);
@@ -77,7 +66,7 @@ var ThreeComponents = (function(){
     var projectilePosition = new THREE.Vector3();
     arrowOrigin = projectilePosition.setFromMatrixPosition(projectile.matrixWorld);
     // Face arrow forwards by default
-    arrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0).normalize(), arrowOrigin, 3, 0xffffff, 0.6, 0.3);
+    arrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0).normalize(), arrowOrigin, 5, 0xffffff, 1, 0.5);
     arrow.name = "ARROW";
     scene.add(arrow);
   }
@@ -209,11 +198,10 @@ var ThreeComponents = (function(){
     );
     scene.simulate();
 
-    camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0, 1000);
+    //camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0, 1000);
+    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 2000);
     // Move the camera away on the Z-axis to see the whole scene
     camera.position.set(0, 0, 50);
-    camera.zoom = 30;
-    camera.updateProjectionMatrix();
 
     // Add Camera and Light(s) to scene
     scene.add(camera);
@@ -225,8 +213,6 @@ var ThreeComponents = (function(){
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    // Assign ID to renderer's dom element - for reference in userInput module
-    renderer.domElement.id = 'game-canvas';
     SCREEN.GAME_SCREEN.appendChild(renderer.domElement);
 
     // Handle window resizing
@@ -317,14 +303,15 @@ var ThreeComponents = (function(){
 
   /**
     * Returns whether or not the individual bricks that make up the structure are all static
+    * A brick is counted as 'static' if it has fallen out of bounds
   */
   function isStructureStatic(){
     // Approximation as velocity might never reach absolute 0
     var epsilon = 0.0001;
 
     for(var i = 0; i < bricks.length; i++){
-      // If any of the bricks are moving, return false
-      if(bricks[i].getLinearVelocity().lengthSq() > epsilon && bricks[i].getAngularVelocity().lengthSq() > epsilon){
+      // If any of the bricks are still moving (and still in bounds) return false
+      if(bricks[i].getLinearVelocity().lengthSq() > epsilon && bricks[i].getAngularVelocity().lengthSq() > epsilon && getBricksPosition()[i].y > OUT_OF_BOUNDS_Y){
         return false;
       }
     }
