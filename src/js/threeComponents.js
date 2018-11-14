@@ -17,6 +17,7 @@ var ThreeComponents = (function(){
   var ground, projectile, arrow;
   // The origin and direction  of the guiding arrow
   var arrowOrigin, arrowDirection;
+  var textureLoader = new THREE.TextureLoader();
   // Initialize empty bricks list to store threejs meshes
   var bricks = [];
 
@@ -37,9 +38,34 @@ var ThreeComponents = (function(){
   */
   function createObjects(){
 
+    // Create Skybox and set as scene background
+    // Skybox from: https://reije081.home.xs4all.nl/skyboxes/
+    // License: https://creativecommons.org/licenses/by-nc-sa/3.0/
+    var skyboxMaterials = [
+      '/src/assets/textures/skybox/px.bmp',
+      '/src/assets/textures/skybox/nx.bmp',
+      '/src/assets/textures/skybox/py.bmp',
+      '/src/assets/textures/skybox/ny.bmp',
+      '/src/assets/textures/skybox/pz.bmp',
+      '/src/assets/textures/skybox/nz.bmp',
+    ];
+    var skyboxTexture = new THREE.CubeTextureLoader().load(skyboxMaterials);
+
+    scene.background = skyboxTexture;
+
     // Create and position the ground mesh
     var groundGeometry = new THREE.BoxGeometry(70, 1, 20);
-    var groundMaterial = new THREE.MeshPhongMaterial({color: 0x228B22});
+    // Load Marble texture for ground
+    // Texture from: https://pixabay.com/en/white-background-pattern-tile-2398946/
+    // Resized to 1024x1024
+    // License: https://pixabay.com/en/service/terms/#usage
+    var groundTexture = textureLoader.load('/src/assets/textures/marble.jpg', function(map){
+      map.wrapS = THREE.RepeatWrapping;
+      map.wrapT = THREE.RepeatWrapping;
+      map.aniosotropy = 4;
+      map.repeat.set(5, 1);
+    });
+    var groundMaterial = new THREE.MeshPhongMaterial({map: groundTexture});
     ground = new Physijs.BoxMesh(groundGeometry, Physijs.createMaterial(groundMaterial, GROUND_FRICTION, GROUND_RESTITUTION), 0);
     ground.name = "GROUND";
     // Set the ground to occupy 1/8th of the screen at the bottom
@@ -47,9 +73,10 @@ var ThreeComponents = (function(){
     ground.__dirtyPosition = true;
     ground.receiveShadow = true;
 
-    // Create and position projectile mesh
-    var projectileGeometry = new THREE.SphereGeometry(PROJECTILE_RADIUS, 20, 20);
-    var projectileMaterial = new THREE.MeshPhongMaterial({color: 0x3342FF});
+    // Create Projectile
+    var projectileGeometry = new THREE.SphereGeometry(PROJECTILE_RADIUS, 50, 50);
+    var projectileMaterial = new THREE.MeshPhongMaterial({color: 0xff0000});
+
     projectile = new Physijs.SphereMesh(projectileGeometry, Physijs.createMaterial(projectileMaterial, PROJECTILE_FRICTION, PROJECTILE_RESTITUTION), PROJECTILE_MASS);
     projectile.name = "PROJECTILE";
     // Set the initial position of the projectile
@@ -80,7 +107,16 @@ var ThreeComponents = (function(){
   function createStructure(structure){
     // Create ThreeJS Geometry and material for the bricks
     var brickGeometry = new THREE.BoxGeometry(BRICK_W, BRICK_H, BRICK_D);
-    var brickMaterial = new THREE.MeshPhongMaterial({color: 0xcccc00});
+    // Texte from: https://freestocktextures.com/texture/closeup-wood-grain-plank,315.html
+    // Resized to 2048x2048
+    // License: https://freestocktextures.com/license/
+    var brickTexture = textureLoader.load('/src/assets/textures/wood.jpg', function(map){
+      map.wrapS = THREE.RepeatWrapping;
+      map.wrapT = THREE.RepeatWrapping;
+      map.aniosotropy = 4;
+      map.repeat.set(2, 1, 0);
+    });
+    var brickMaterial = new THREE.MeshPhongMaterial({map: brickTexture});
 
     // Iterate through the structure array. Create and position the bricks accordingly
     // Start right->left, bottom->top
@@ -203,7 +239,7 @@ var ThreeComponents = (function(){
     scene.simulate();
 
     //camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0, 1000);
-    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 2000);
+    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
     // Move the camera away on the Z-axis to see the whole scene
     camera.position.set(0, 0, 50);
 
