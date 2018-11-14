@@ -3,7 +3,7 @@
   * Manage all Three.js scene components
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
-  * @version 0.1
+  * @version 0.2
 */
 
 /**
@@ -97,6 +97,7 @@ var ThreeComponents = (function(){
     // Face arrow forwards by default
     arrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0).normalize(), arrowOrigin, 5, 0xffffff, 1, 0.5);
     arrow.name = "ARROW";
+
     scene.add(arrow);
   }
 
@@ -306,6 +307,14 @@ var ThreeComponents = (function(){
 
     // Show arrow
     arrow.visible = true;
+
+    // Update Arrow Color
+    if(Game.isPlayerTurn()){
+      arrow.setColor(new THREE.Color('yellow'));
+    }else{
+      arrow.setColor(new THREE.Color('white'));
+    }
+
 
     // Remove Previous Structure
     removeStructure();
