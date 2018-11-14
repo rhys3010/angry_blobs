@@ -73,7 +73,7 @@ var Ui = (function(){
 
     // Update progressbar + value
     $('#power-progress-bar').attr('aria-valuenow', powerPercent).css('width', powerPercent + '%');
-    document.getElementById('power-label').innerHTML = powerPercent + '%';
+    document.getElementById('power-label').innerHTML = 'Power: ' + powerPercent + '%';
   }
 
   function showPowerToolTip(){
