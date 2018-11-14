@@ -58,11 +58,14 @@
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
   background-color: black;
   font-family: 'Fixedsys', Monospace;
 }
 
 #power-tooltip {
+  padding: 5px 10px 5px 10px;
+  background-color: rgba(22, 22, 22, 0.5);
   position: absolute;
   display: none;
   user-select: none;
@@ -72,13 +75,9 @@
   -ms-user-select: none;
 }
 
-#end-button {
-  position: absolute;
-  top: 1%;
-  right: 1%;
-}
-
 #game-score-display {
+  padding: 1% 2% 1% 2%;
+  background-color: rgba(22, 22, 22, 0.5);
   position: absolute;
   top: 1%;
   left: 1%;

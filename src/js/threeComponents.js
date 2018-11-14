@@ -308,11 +308,12 @@ var ThreeComponents = (function(){
     // Show arrow
     arrow.visible = true;
 
-    // Update Arrow Color
+    // Update Arrow Color and Direction
     if(Game.isPlayerTurn()){
       arrow.setColor(new THREE.Color('yellow'));
     }else{
       arrow.setColor(new THREE.Color('white'));
+      arrow.setDirection(new THREE.Vector3(0.5, 0.3, 0));
     }
 
 
@@ -366,8 +367,6 @@ var ThreeComponents = (function(){
     // Multiply directional vector by power
     projectile.applyCentralImpulse(direction.multiplyScalar(power));
 
-    // Reset Arrow Direction to default position
-    arrowDirection = new THREE.Vector3(0.5, 0.1, 0);
     // Hide arrow
     arrow.visible = false;
   }
