@@ -62,14 +62,18 @@ var Ui = (function(){
   */
   function updateToolTipPosition(x, y){
     powerTooltip.style.top = (y + 20) + 'px';
-    powerTooltip.style.left = (x - 30) + 'px';
+    powerTooltip.style.left = (x - 60) + 'px';
   }
 
   /**
     * Update the value shown on the power tool tip
   */
   function updateToolTipValue(power){
-    powerTooltip.innerHTML = "Power: " + Math.floor((power / MAX_POWER) * 100) + "%";
+    var powerPercent = Math.floor((power / MAX_POWER) * 100);
+
+    // Update progressbar + value
+    $('#power-progress-bar').attr('aria-valuenow', powerPercent).css('width', powerPercent + '%');
+    document.getElementById('power-label').innerHTML = powerPercent + '%';
   }
 
   function showPowerToolTip(){
@@ -103,9 +107,11 @@ var Ui = (function(){
       if(Game.isPlayerTurn()){
         playerScoreLabel.style.color = 'yellow';
         botScoreLabel.style.color = 'white';
+        SCREEN.GAME_SCREEN.style.cursor = 'crosshair';
       }else{
         playerScoreLabel.style.color = 'white';
         botScoreLabel.style.color = 'yellow';
+        SCREEN.GAME_SCREEN.style.cursor = 'not-allowed';
       }
     }
 

@@ -5,19 +5,29 @@
   padding: 0;
   overflow: hidden;
   background-color: black;
+  cursor: crosshair;
   @include heading-font
 }
 
 #power-tooltip{
-  padding: 5px 10px 5px 10px;
-  background-color: rgba(22, 22, 22, 0.5);
   position: absolute;
   display:none;
+  width: 7%;
   user-select: none;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+
+  .progress{
+    .progress-bar{
+      -webkit-transition: none;
+      -moz-transition: none;
+      -ms-transition: none;
+      -o-transition: none;
+      transition: none;
+    }
+  }
 }
 
 #game-score-display{
