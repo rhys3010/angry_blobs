@@ -3,7 +3,7 @@
   * Declare all of the game's constants for global access
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
-  * @version 0.1
+  * @version 1.0
 */
 
 // State Enum Type

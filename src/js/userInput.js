@@ -1,9 +1,10 @@
 /**
   * userInput.js
-  * Handle all user input, (button clicks, movmenet etc)
+  * Interface with Game module and UI module to handle all user input
+  * (button clicks, movmement etc)
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
-  * @version 0.1
+  * @version 1.0
 */
 
 /**

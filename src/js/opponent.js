@@ -12,7 +12,7 @@
   *   > If the structure isnt tall - aim for center
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
-  * @version 0.3
+  * @version 1.0
 */
 
 /**

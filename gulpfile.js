@@ -3,7 +3,7 @@
   * Angry Blobs - Gulp Configuration
   *
   * @author Rhys Evans
-  * @version 23/10/2018
+  * @version 1.0
 */
 
 var gulp = require('gulp');
@@ -85,6 +85,12 @@ gulp.task('dist', function() {
       './index.html',
     ])
     .pipe(gulp.dest('./dist/'));
+
+  // favicon
+  gulp.src([
+    './favicon.ico',
+  ])
+  .pipe(gulp.dest('./dist/'));
 
   // Javascript files
   gulp.src([

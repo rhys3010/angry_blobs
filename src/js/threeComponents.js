@@ -3,7 +3,7 @@
   * Manage all Three.js scene components
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
-  * @version 0.2
+  * @version 1.0
 */
 
 /**

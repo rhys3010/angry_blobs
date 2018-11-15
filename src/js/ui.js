@@ -3,7 +3,7 @@
   * Handle all of the game's UI components
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
-  * @version 0.1
+  * @version 1.0
 */
 
 /**
