@@ -12,7 +12,7 @@
   *   > If the structure isnt tall - aim for center
   *
   * @author Rhys Evans (rhe24@aber.ac.uk)
-  * @version 0.1
+  * @version 0.3
 */
 
 /**
@@ -141,6 +141,7 @@ var Opponent = (function(){
     var y = targetPos.y - ThreeComponents.getProjectilePosition().y;
     // Change in Velocity = Impulse / Mass
     // Velocity needed some bodging so is not 100% mathematically correct :(
+    // It is however very accurate and looks correct in-game.
     var v = ((directionToTarget.multiplyScalar(power).lengthSq()) / PROJECTILE_MASS) * 2;
     var g = 9.81;
     var sqrt = Math.pow(v, 4) - (g * (g * (x * x) + 2 * y * (v * v)));
