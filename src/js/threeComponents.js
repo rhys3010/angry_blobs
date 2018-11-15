@@ -42,12 +42,12 @@ var ThreeComponents = (function(){
     // Skybox from: https://reije081.home.xs4all.nl/skyboxes/
     // License: https://creativecommons.org/licenses/by-nc-sa/3.0/
     var skyboxMaterials = [
-      '/src/assets/textures/skybox/px.bmp',
-      '/src/assets/textures/skybox/nx.bmp',
-      '/src/assets/textures/skybox/py.bmp',
-      '/src/assets/textures/skybox/ny.bmp',
-      '/src/assets/textures/skybox/pz.bmp',
-      '/src/assets/textures/skybox/nz.bmp',
+      './src/assets/textures/skybox/px.bmp',
+      './src/assets/textures/skybox/nx.bmp',
+      './src/assets/textures/skybox/py.bmp',
+      './src/assets/textures/skybox/ny.bmp',
+      './src/assets/textures/skybox/pz.bmp',
+      './src/assets/textures/skybox/nz.bmp',
     ];
     var skyboxTexture = new THREE.CubeTextureLoader().load(skyboxMaterials);
 
@@ -59,7 +59,7 @@ var ThreeComponents = (function(){
     // Texture from: https://pixabay.com/en/white-background-pattern-tile-2398946/
     // Resized to 1024x1024
     // License: https://pixabay.com/en/service/terms/#usage
-    var groundTexture = textureLoader.load('/src/assets/textures/marble.jpg', function(map){
+    var groundTexture = textureLoader.load('./src/assets/textures/marble.jpg', function(map){
       map.wrapS = THREE.RepeatWrapping;
       map.wrapT = THREE.RepeatWrapping;
       map.aniosotropy = 4;
@@ -111,7 +111,7 @@ var ThreeComponents = (function(){
     // Texte from: https://freestocktextures.com/texture/closeup-wood-grain-plank,315.html
     // Resized to 2048x2048
     // License: https://freestocktextures.com/license/
-    var brickTexture = textureLoader.load('/src/assets/textures/wood.jpg', function(map){
+    var brickTexture = textureLoader.load('./src/assets/textures/wood.jpg', function(map){
       map.wrapS = THREE.RepeatWrapping;
       map.wrapT = THREE.RepeatWrapping;
       map.aniosotropy = 4;
@@ -226,8 +226,8 @@ var ThreeComponents = (function(){
   */
   function create(){
     // Initialize PhysiJs
-    Physijs.scripts.worker = "/../../vendor/physijs/physijs_worker.js";
-    Physijs.scripts.ammo = "/../../vendor/physijs/ammo.js";
+    Physijs.scripts.worker = "./vendor/physijs/physijs_worker.js";
+    Physijs.scripts.ammo = "./ammo.js";
 
     scene = new Physijs.Scene();
     // Bind scene.simulate() to run independently of scene rendering

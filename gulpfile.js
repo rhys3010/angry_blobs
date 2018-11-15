@@ -118,7 +118,7 @@ gulp.task('dist', function() {
 
   // Assets - Textures
   gulp.src([
-    './src/assets/textures/*',
+    './src/assets/textures/**/*.*',
   ])
   .pipe(gulp.dest('./dist/src/assets/textures/'));
 
