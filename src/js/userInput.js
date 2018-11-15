@@ -97,6 +97,23 @@ var UserInput = (function(){
     }
   }
 
+  /**
+    * Set the game's difficulty based on checkbox selected
+  */
+  function setDifficulty(){
+    if(document.getElementById('easy-checkbox').checked){
+      Opponent.setOpponentError(OPPONENT_ERROR_EASY);
+    }
+
+    if(document.getElementById('normal-checkbox').checked){
+      Opponent.setOpponentError(OPPONENT_ERROR_NORMAL);
+    }
+
+    if(document.getElementById('hard-checkbox').checked){
+      Opponent.setOpponentError(OPPONENT_ERROR_HARD);
+    }
+  }
+
   /* ===== PUBLIC METHODS ===== */
 
   /**
@@ -105,6 +122,7 @@ var UserInput = (function(){
   function init(){
     // Bind start button event
     startButton.onclick = function(){
+      setDifficulty();
       Game.startGame();
     };
 

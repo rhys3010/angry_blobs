@@ -25,16 +25,37 @@
     <div id="start-container" class="m-0 p-0" hidden>
       <div class="container mx-auto text-secondary">
         <h1 class="title text-center">Angry Blobs</h1>
-        <h2 class="text-center my-4" style="text-decoration: underline">How to Play</h2>
-        <ul class="text-center my-4" style="list-style: none">
-          <li>A Player and BOT will take turns to shoot a projectile at a structure of wooden blocks</li>
-          <br/>
-          <li>Scores are awarded based on how successfully the structure was demolished</li>
-          <br/>
-          <li>The player with the highest score after 3 turns wins</li>
-          <br/>
-          <li>To shoot he projectile aim the mouse in the direction you want to shoot, and hold down LEFT CLICK to select the power of the shot and release when ready</li>
-        </ul>
+        <div class="row my-5">
+          <div class="col-sm-6">
+            <h2 class="text-center" style="text-decoration: underline">How to Play</h2>
+            <ul class="text-center my-4" style="list-style: none">
+              <li>A Player and BOT will take turns to shoot a projectile at a structure of wooden blocks</li>
+              <br/>
+              <li>Scores are awarded based on how successfully the structure was demolished</li>
+              <br/>
+              <li>The player with the highest score after 3 turns wins</li>
+              <br/>
+              <li>To shoot he projectile aim the mouse in the direction you want to shoot, and hold down LEFT CLICK to select the power of the shot and release when ready</li>
+            </ul>
+          </div>
+          <div class="col-sm-6">
+            <h2 class="text-center" style="text-decoration: underline">BOT Difficulty</h2>
+            <div class="row difficulty-options text-center my-5">
+              <div class="form-control-lg form-check form-check-inline">
+                <input class="form-check-input" name="difficulty" type="radio" id="easy-checkbox" value="easy" checked>
+                <label class="form-check-label" for="easy-checkbox">Easy</label>
+              </div>
+              <div class="form-control-lg form-check form-check-inline">
+                <input class="form-check-input" name="difficulty" type="radio" id="normal-checkbox" value="normal">
+                <label class="form-check-label" for="normal-checkbox">Normal</label>
+              </div>
+              <div class="form-control-lg form-check form-check-inline">
+                <input class="form-check-input" name="difficulty" type="radio" id="hard-checkbox" value="hard">
+                <label class="form-check-label" for="hard-checkbox">Hard</label>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <a id="start-button" class="btn btn-lg btn-primary mx-auto">Start</a>
         </div>

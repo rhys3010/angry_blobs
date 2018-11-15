@@ -20,6 +20,10 @@
 */
 var Opponent = (function(){
 
+  // The error applied to the BOT's decisions
+  // based on difficulty
+  var opponentError;
+
   /* ===== PRIVATE METHODS ===== */
 
   /**
@@ -98,7 +102,7 @@ var Opponent = (function(){
   */
   function choosePower(){
     // Set the minimum power to be the bottom of the random range
-    var minPower = MAX_POWER - (MAX_POWER * OPPONENT_ERROR);
+    var minPower = MAX_POWER - (MAX_POWER * opponentError);
 
     // Choose a random power within the top X% of the range
     return Math.floor(Math.random() * (MAX_POWER - minPower + 1)) + minPower;
@@ -150,16 +154,24 @@ var Opponent = (function(){
     // Apply error to y-direction of the shot
     // e.g. if y value is 0.6 and error value is 20%
     // y value can be any random value between 0.54 and 0.66
-    var maxDirection = direction.y + (direction.y * OPPONENT_ERROR);
-    var minDirection = direction.y - (direction.y * OPPONENT_ERROR);
+    var maxDirection = direction.y + (direction.y * opponentError);
+    var minDirection = direction.y - (direction.y * opponentError);
     direction.setY(Math.random() * (maxDirection - minDirection) + minDirection);
 
     Game.takeTurn(direction, power);
   }
 
+  /**
+    * Set the error of the BOT based on difficulty
+  */
+  function setOpponentError(error){
+    opponentError = error;
+  }
+
   /* ===== EXPORT PUBLIC METHODS ===== */
   return{
     takeTurn: takeTurn,
+    setOpponentError: setOpponentError,
   };
 
 }());

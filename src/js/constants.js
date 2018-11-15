@@ -61,8 +61,10 @@ const BRICK_H = 6;
 const BRICK_D = 1.25;
 
 // Opponent Constants
-// Tweak this value to change the opponent's 'difficulty'
-const OPPONENT_ERROR = 0.5;
+// Tweak these value to change the opponent's 'difficulty' at different stages
+const OPPONENT_ERROR_EASY = 0.75;
+const OPPONENT_ERROR_NORMAL = 0.5;
+const OPPONENT_ERROR_HARD = 0.25;
 const STRUCTURE_TALL_LAYERS = 5;
 
 /**
