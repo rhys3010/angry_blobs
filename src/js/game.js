@@ -54,8 +54,7 @@ var Game = (function(){
     // If game has entered a new round, choose a new (random) structure
     if(newRound){
       var randomIndex = Math.floor(Math.random() * STRUCTURES.length);
-      //currentStructure = STRUCTURES[randomIndex];
-      currentStructure = STRUCTURES[11];
+      currentStructure = STRUCTURES[randomIndex];
 
       // Remove current structure from the structure pool to prevent repeating
       structurePool = structurePool.filter(function(structure){
