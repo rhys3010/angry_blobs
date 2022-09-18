@@ -4,6 +4,7 @@
   "description": "Angry Birds inspired game implemented in Three.js",
   "main": "index.php",
   "scripts": {
+    "gulp": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Rhys Evans",
@@ -17,5 +18,8 @@
     "gulp-uglify": "^3.0.1",
     "jquery": "^3.3.1",
     "three": "^0.97.0"
+  },
+  "overrides": {
+    "graceful-fs": "^4.2.10"
   }
 }
